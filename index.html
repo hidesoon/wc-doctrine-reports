@@ -1,0 +1,2997 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>WC Doctrine Intel — 2026-04-20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --base: #0b0f17;
+  --panel: #111826;
+  --panel-edge: #1c2230;
+  --text: #c7ccd1;
+  --text-dim: #7a8494;
+  --amber: #e9b351;
+  --amber-dim: #7a6134;
+  --red: #c94740;
+  --teal: #5dd3d8;
+  --official: #4ade80;
+  --gradeA: #ef4444;
+  --gradeB: #e9b351;
+  --gradeC: #94a3b8;
+}
+* { box-sizing: border-box; }
+html { background: var(--base); }
+body {
+  margin: 0;
+  font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse at top, rgba(233,179,81,0.04), transparent 50%),
+    linear-gradient(180deg, #0b0f17 0%, #080b12 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.55;
+  font-size: 14px;
+  min-height: 100vh;
+}
+/* 1px grid overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(199,204,209,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(199,204,209,0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+}
+.container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+/* Classification strip */
+.clsf-strip {
+  background: var(--amber);
+  color: #0a0a0a;
+  font-family: 'Space Mono', 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.clsf-strip .sep { opacity: 0.5; }
+
+/* Title block */
+.title-block {
+  padding: 2.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--panel-edge);
+  margin-bottom: 2rem;
+}
+.title-block .eyebrow {
+  font-family: 'Space Mono', monospace;
+  color: var(--amber);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.title-block h1 {
+  font-family: 'Space Mono', 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 2.4rem;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: #f5f5f7;
+  line-height: 1.1;
+}
+.title-block h1 .dim { color: var(--text-dim); font-weight: 400; }
+.title-block .meta {
+  margin-top: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+.title-block .meta span + span::before { content: ' · '; color: var(--amber-dim); padding: 0 0.25rem; }
+
+/* Stat cards */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--amber);
+  padding: 1rem 1.25rem;
+}
+.stat.alert { border-left-color: var(--red); }
+.stat.ok { border-left-color: var(--teal); }
+.stat .label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+.stat .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f5f5f7;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.stat .val .unit { font-size: 1rem; color: var(--amber); margin-left: 0.1rem; }
+
+/* Section */
+section { margin-bottom: 3rem; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--panel-edge);
+}
+.section-header h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin: 0;
+}
+.section-header .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+.section-header .hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Ship row cards */
+.row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 2px;
+  margin-bottom: 4px;
+  transition: border-color 0.15s;
+}
+.row:hover { border-color: rgba(233,179,81,0.3); }
+.row .ship-icon {
+  width: 56px; height: 56px;
+  border-radius: 2px;
+  background: #000;
+  border: 1px solid var(--panel-edge);
+  object-fit: cover;
+  display: block;
+}
+.row .ship-info .en {
+  font-weight: 600;
+  color: #f5f5f7;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+.row .ship-info .zh {
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-top: 2px;
+}
+.row .ship-info .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.row .ship-info .chip {
+  display: inline-block;
+  padding: 1px 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.chip.official { background: rgba(74,222,128,0.12); color: var(--official); border: 1px solid rgba(74,222,128,0.3); }
+.chip.A { background: rgba(239,68,68,0.12); color: var(--gradeA); border: 1px solid rgba(239,68,68,0.3); }
+.chip.B { background: rgba(233,179,81,0.12); color: var(--gradeB); border: 1px solid rgba(233,179,81,0.3); }
+.chip.C { background: rgba(148,163,184,0.12); color: var(--gradeC); border: 1px solid rgba(148,163,184,0.3); }
+.chip.source { background: transparent; color: var(--teal); border: 1px solid rgba(93,211,216,0.3); }
+
+/* zKB link chip */
+a.zkb {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  text-decoration: none;
+  padding: 1px 6px;
+  border: 1px solid rgba(93,211,216,0.25);
+  border-radius: 2px;
+  margin-left: 6px;
+  transition: all 0.15s;
+  vertical-align: middle;
+}
+a.zkb:hover { background: rgba(93,211,216,0.1); border-color: var(--teal); }
+
+/* Expandable doctrine rows */
+.row.expandable { cursor: pointer; user-select: none; }
+.row.expandable::after {
+  content: '▸';
+  color: var(--text-dim);
+  font-size: 10px;
+  margin-left: 6px;
+  transition: transform 0.15s;
+  align-self: center;
+}
+.row.expandable.open::after { content: '▾'; color: var(--amber); }
+.row.expandable:hover { border-color: rgba(233,179,81,0.4); }
+.expand-panel {
+  display: none;
+  background: #070a12;
+  border: 1px solid var(--panel-edge);
+  border-top: none;
+  padding: 1rem 1.25rem;
+  margin-top: -5px;
+  margin-bottom: 4px;
+  border-radius: 0 0 2px 2px;
+}
+.expand-panel.open { display: block; }
+.expand-panel pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #d4d8de;
+  background: transparent;
+  margin: 0 0 0.75rem 0;
+  padding: 0;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  max-height: 380px;
+  overflow-y: auto;
+}
+.expand-panel .toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--panel-edge);
+  padding-top: 0.75rem;
+}
+.expand-panel button {
+  background: var(--amber);
+  color: #0a0a0a;
+  border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.expand-panel button:hover { background: #f5c06c; transform: translateY(-1px); }
+.expand-panel button.secondary { background: transparent; color: var(--teal); border: 1px solid rgba(93,211,216,0.3); }
+.expand-panel button.secondary:hover { background: rgba(93,211,216,0.1); }
+.expand-panel .hint {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+}
+.copy-ok { color: var(--official) !important; }
+
+/* Outline / TOC */
+.toc {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--teal);
+  border-radius: 2px;
+}
+.toc .toc-header {
+  grid-column: 1 / -1;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.25rem;
+}
+.toc a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  background: #0e1320;
+  border-radius: 2px;
+  font-size: 12px;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.toc a:hover {
+  border-color: var(--amber);
+  background: #141c2e;
+  color: var(--amber);
+}
+.toc a .num {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 700;
+}
+.toc a .meta {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  font-size: 10px;
+  margin-left: auto;
+}
+
+/* Legend - collapsible */
+details.legend {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--amber);
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+details.legend > summary {
+  padding: 0.85rem 1.25rem;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details.legend > summary::before { content: '▸'; color: var(--text-dim); transition: transform 0.15s; font-size: 10px; }
+details.legend[open] > summary::before { content: '▾'; color: var(--amber); }
+details.legend > summary::-webkit-details-marker { display: none; }
+details.legend .legend-body {
+  padding: 0 1.25rem 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  border-top: 1px dashed var(--panel-edge);
+  padding-top: 1rem;
+}
+details.legend h4 {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 0 0 0.5rem 0;
+}
+details.legend p {
+  margin: 0.35rem 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text);
+}
+details.legend p b { color: var(--amber); font-weight: 600; }
+details.legend code {
+  background: #0a0d15;
+  color: var(--teal);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* Collapsible registry section */
+details.registry {
+  margin-bottom: 2rem;
+  border: none;
+  padding: 0;
+}
+details.registry > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--panel-edge);
+  user-select: none;
+}
+details.registry > summary::before { content: '▸'; color: var(--text-dim); margin-right: 4px; font-size: 12px; }
+details.registry[open] > summary::before { content: '▾'; color: var(--amber); }
+details.registry > summary::-webkit-details-marker { display: none; }
+details.registry > summary h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin: 0;
+}
+details.registry > summary .count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; }
+details.registry > summary .hint { margin-left: auto; font-size: 12px; color: var(--text-dim); font-style: italic; }
+details.registry .subgroup-header {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 1.25rem 0 0.5rem 0;
+  padding-left: 4px;
+  border-left: 2px solid var(--panel-edge);
+  padding: 0.2rem 0 0.2rem 0.5rem;
+}
+
+/* Scroll margin so TOC jumps don't land under sticky strip */
+section[id], details[id] { scroll-margin-top: 1rem; }
+
+/* Market status dual-column row */
+.mkt-row {
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+.mkt-row .ship-icon { width: 52px; height: 52px; border-radius: 2px; border: 1px solid var(--panel-edge); }
+.mkt-col {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.1rem 0.6rem;
+  align-items: baseline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--panel-edge);
+}
+.mkt-col .mkt-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  grid-column: 1 / -1;
+  margin-bottom: 2px;
+}
+.mkt-col .mkt-label .loc { color: var(--amber); }
+.mkt-col .kv { color: var(--text-dim); font-size: 10px; letter-spacing: 0.05em; }
+.mkt-col .v { color: #f5f5f7; font-size: 13px; font-variant-numeric: tabular-nums; }
+.mkt-col .v.na { color: var(--text-dim); font-style: italic; font-size: 11px; }
+.mkt-col .delta { font-size: 11px; font-weight: 600; }
+.mkt-col .delta.up { color: var(--official); }
+.mkt-col .delta.down { color: var(--red); }
+.mkt-col .delta.flat { color: var(--text-dim); }
+.mkt-row .ship-brief .en { color: #f5f5f7; font-weight: 600; font-size: 13px; }
+.mkt-row .ship-brief .zh { color: var(--text-dim); font-size: 11.5px; }
+.mkt-row .ship-brief .line2 { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+/* Author byline — subtle */
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 2.5rem;
+  padding: 0.85rem 1rem;
+  background: #0e1320;
+  border: 1px solid var(--panel-edge);
+  border-left: 2px solid var(--amber-dim);
+  border-radius: 2px;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+.byline:hover { opacity: 1; }
+.byline img.portrait { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--panel-edge); }
+.byline img.emblem { width: 22px; height: 22px; border-radius: 3px; vertical-align: middle; margin: 0 4px; opacity: 0.85; }
+.byline .info { flex: 1; font-size: 11.5px; line-height: 1.6; }
+.byline .info .label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 2px;
+}
+.byline .info .who { color: var(--text); font-weight: 500; }
+.byline .info .who b { color: #e8e8eb; font-weight: 600; }
+.byline .info .affil { color: var(--text-dim); font-size: 10.5px; }
+.row .loss-expr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: #f5f5f7;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+  letter-spacing: 0.02em;
+}
+.row .loss-expr .op { color: var(--amber); padding: 0 0.3rem; }
+.row .loss-expr .unit { color: var(--amber); }
+.row .loss-expr .total { font-weight: 700; }
+.row .loss-expr .per-unit { color: var(--text-dim); font-size: 12px; margin-left: 0.5rem; }
+
+/* Unattributed explanation box */
+.explain {
+  background: linear-gradient(180deg, rgba(201,71,64,0.08) 0%, transparent 100%);
+  border: 1px solid rgba(201,71,64,0.25);
+  border-left: 3px solid var(--red);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+.explain .title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.explain ol {
+  margin: 0.5rem 0 0.25rem 0;
+  padding-left: 1.5rem;
+  color: var(--text);
+}
+.explain ol li { margin-bottom: 0.35rem; }
+.explain ol li b { color: var(--amber); font-weight: 600; }
+.explain .hint { font-size: 12px; color: var(--text-dim); margin-top: 0.75rem; font-style: italic; }
+
+/* Trend matrix */
+.trend {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+}
+.trend th, .trend td { padding: 0.4rem 0.6rem; text-align: right; border-bottom: 1px solid var(--panel-edge); font-variant-numeric: tabular-nums; }
+.trend th { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: #0e1320; font-weight: 600; }
+.trend td:first-child, .trend th:first-child { text-align: left; font-family: 'Noto Sans SC', sans-serif; color: var(--text); }
+.trend td.zero { color: var(--text-dim); opacity: 0.4; }
+.trend td.total { color: var(--amber); font-weight: 700; }
+
+/* Footer */
+.footer-strip {
+  margin-top: 3rem;
+  background: var(--amber);
+  color: #0a0a0a;
+  font-family: 'Space Mono', 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (max-width: 720px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .title-block h1 { font-size: 1.6rem; }
+  .row { grid-template-columns: 56px 1fr; }
+  .row .loss-expr { grid-column: 1 / -1; text-align: left; margin-top: 0.25rem; }
+}
+</style>
+</head><body>
+<div class="clsf-strip">
+<span>▌ FOR INTERNAL USE ─ WC // FRT-CN</span>
+<span>RPT-WC-2026-04-20-0001</span>
+<span>2026-04-20 20:32 UTC</span>
+</div>
+<div class="container">
+<div class="title-block">
+<div class="eyebrow">Daily Intelligence Brief</div>
+<h1>WC DOCTRINE INTEL <span class="dim">// 2026-04-20</span></h1>
+<div class="meta">
+<span>Alliance: Fraternity. [FRT]</span>
+<span>Combat losses: 495</span>
+<span>ISK burned: 144.41b</span>
+<span>Avg/unit: 292m</span>
+</div>
+</div>
+<div class="stats">
+<div class="stat alert"><div class="label">combat losses</div><div class="val">495</div></div>
+<div class="stat alert"><div class="label">ISK burned</div><div class="val">144.41b</div></div>
+<div class="stat"><div class="label">doctrines active</div><div class="val">17</div></div>
+<div class="stat ok"><div class="label">pending review</div><div class="val">21</div></div>
+</div>
+<div class="toc">
+<div class="toc-header">◆ Sections · 本报告导览</div>
+<a href="#sec-attribution"><span class="num">01</span>Doctrine Attribution 归因<span class="meta">4</span></a>
+<a href="#sec-unattributed"><span class="num">02</span>⚠ Unattributed 未归因<span class="meta">12</span></a>
+<a href="#sec-market"><span class="num">03</span>🛒 Market Status 库存<span class="meta">17</span></a>
+<a href="#sec-breakdown"><span class="num">04</span>Loss Breakdown 战损明细<span class="meta">122</span></a>
+<a href="#sec-trend"><span class="num">05</span>7-Day Trend 趋势<span class="meta">34</span></a>
+<a href="#sec-registry"><span class="num">06</span>Registry 注册表 (折叠)<span class="meta">38</span></a>
+</div>
+<details class="legend">
+<summary>📖 How to read this brief · 报告图例 (点击展开)</summary>
+<div class="legend-body">
+<div><h4>Doctrine Grade · 等级</h4>
+<p><span class="chip official">OFFICIAL</span> 来自 <a href="https://github.com/OrthelT/mkts_backend/tree/main/fits" style="color:var(--teal)">OrthelT/mkts_backend/fits</a> 官方 fit 库,Orthel 手工维护</p>
+<p><span class="chip A">A</span> <b>确认舰队 doctrine</b> — km 签名集中度 ≥80% + 同场有 logi+links 共损</p>
+<p><span class="chip B">B</span> <b>疑似 doctrine</b> — 集中度 ≥60% 但缺某个信号(如无 links 共损)</p>
+<p><span class="chip C">C</span> <b>候选</b> — 集中度 30-60%,可能是散打 / 演化中的 fit,待人工审</p>
+</div>
+<div><h4>Source · 来源</h4>
+<p><b>Orthel ↑</b> — 从 mkts_backend/fits 上游同步</p>
+<p><b>km reverse</b> — 本地 FRT 阵亡数据反推 (<code>detect.py</code>)</p>
+<p><b>manual</b> — 手工录入</p>
+</div>
+<div><h4>Key Terms · 关键概念</h4>
+<p><b>km</b> · killmail,来自 <a href="https://zkillboard.com" style="color:var(--teal)">zKillboard</a> 同步</p>
+<p><b>配装签名</b> · 槽位 + 模块 ID 的规范化集合,用 Jaccard 相似度匹配两个 fit 是否同一 doctrine(阈值 70%)</p>
+<p><b>unattributed</b> · 战损未匹配任何已注册 doctrine,见 ⚠ 段三原因</p>
+</div>
+<div><h4>Numbers · 数字读法</h4>
+<p><b>30 <span style="color:var(--amber)">×</span> 190m <span style="color:var(--amber)">=</span> 5.7b</b> · 损失 30 架 × 单价 190m ISK = 合计 5.7b</p>
+<p><b>30d: 5.7b</b> · 该 doctrine 过去 30 天累计 ISK 损失</p>
+<p><b>Σ</b> · 合计(希腊字母 sigma)</p>
+<p><b>km count</b> · 构建该 doctrine 签名时的样本数</p>
+</div>
+</div></details>
+<section id="sec-attribution">
+<div class="section-header">
+<h2>◉ Doctrine Attribution</h2>
+<span class="count">[ 4 matched ]</span>
+<span class="hint">losses matched to registered doctrine by fit signature (Jaccard ≥ 0.70)</span>
+</div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12032/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Manticore <span class="zh">蝎尾怪级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12032/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Manticore km-C004-5baf</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">61m</span><span class="op">=</span><span class="total">123m</span></span>
+</div>
+<div class="expand-panel">
+<pre>[Manticore, FRT Manticore km-C004]
+
+Crosslink Compact Ballistic Control System
+Ballistic Control System II
+
+5MN Y-T8 Compact Microwarpdrive
+Small F-S9 Regolith Compact Shield Extender
+Small F-S9 Regolith Compact Shield Extender
+Phased Scoped Target Painter
+
+Torpedo Launcher II
+Torpedo Launcher II
+Torpedo Launcher II
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Processor Overclocking Unit I
+Small Bay Loading Accelerator I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12032/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ 2026-04-20 losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12034/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Hound <span class="zh">猎犬级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12034/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Hound km-C003-aee7</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">40m</span><span class="op">=</span><span class="total">40m</span></span>
+</div>
+<div class="expand-panel">
+<pre>[Hound, FRT Hound km-C003]
+
+Vigor Compact Micro Auxiliary Power Core
+Ballistic Control System II
+Ballistic Control System II
+
+5MN Y-T8 Compact Microwarpdrive
+Medium F-S9 Regolith Compact Shield Extender
+Phased Scoped Target Painter
+
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Processor Overclocking Unit I
+Small Hydraulic Bay Thrusters I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12034/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ 2026-04-20 losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/620/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Osprey <span class="zh">鱼鹰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/620/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Osprey km-C008-a4c9</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">16m</span><span class="op">=</span><span class="total">32m</span></span>
+</div>
+<div class="expand-panel">
+<pre>[Osprey, FRT Osprey km-C008]
+
+Damage Control II
+Mark I Compact Power Diagnostic System
+Mark I Compact Reactor Control Unit
+
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Large Shield Extender II
+Large F-S9 Regolith Compact Shield Extender
+50MN Y-T8 Compact Microwarpdrive
+
+Medium Murky Compact Remote Shield Booster
+Medium Murky Compact Remote Shield Booster
+Medium Murky Compact Remote Shield Booster
+Medium Inductive Compact Remote Capacitor Transmitter
+Medium Inductive Compact Remote Capacitor Transmitter
+
+Medium Thermal Shield Reinforcer I
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/620/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ 2026-04-20 losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/32880/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Venture <span class="zh">冲锋者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/32880/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Venture km-B020-3f2b</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">5m</span><span class="op">=</span><span class="total">10m</span></span>
+</div>
+<div class="expand-panel">
+<pre>[Venture, FRT Venture km-B020]
+
+Expanded Cargohold II
+
+
+Industrial Cynosural Field Generator
+
+Small Cargohold Optimization I
+Small Cargohold Optimization I
+Small Cargohold Optimization I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/32880/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ 2026-04-20 losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+</section>
+<section id="sec-unattributed">
+<div class="section-header">
+<h2>⚠ Unattributed Intel</h2>
+<span class="count">[ 172 losses, 12 ship types ]</span>
+</div>
+<div class="explain">
+<div class="title">Coverage Gap — 3 reasons possible</div>
+<ol>
+<li><b>① 新 doctrine 在成形</b> — 联盟已在打,但还没注册到 registry / 未被 Orthel 上架到 wcmkts。下方高 count 项应重点关注。</li>
+<li><b>② 飞行员散打 / solo</b> — 非舰队 fit,个人自选装备(常见于 T2 frig、轻骑兵、盗号小船)。不需要进 registry。</li>
+<li><b>③ 支援 / utility 舰种</b> — Sabre / Dictors / Ishtar ratting / Vexor 等不走 doctrine 的职能舰,每个飞手各自选装。</li>
+</ol>
+<div class="hint">Action:查看下表,若某舰种连续多日出现且数量 &gt; 5 → 很可能是情况 ①,用 <code style="background:#1c2230;padding:1px 4px;color:var(--amber);font-family:JetBrains Mono">detect.py</code> 反推 + 提议注册。</div>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/12005/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Ishtar <span class="zh">伊什塔级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12005/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">35</span><span class="op">×</span><span class="unit">210m</span><span class="op">=</span><span class="total">7.34b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/22428/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Redeemer <span class="zh">救世级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/22428/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">1.22b</span><span class="op">=</span><span class="total">4.87b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/17715/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Gila <span class="zh">毒蜥级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17715/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">14</span><span class="op">×</span><span class="unit">323m</span><span class="op">=</span><span class="total">4.52b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/47466/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Praxis <span class="zh">实践级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/47466/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">12</span><span class="op">×</span><span class="unit">371m</span><span class="op">=</span><span class="total">4.46b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29990/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Loki <span class="zh">洛基级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29990/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">5</span><span class="op">×</span><span class="unit">881m</span><span class="op">=</span><span class="total">4.41b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29988/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Proteus <span class="zh">海神级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29988/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">3</span><span class="op">×</span><span class="unit">1.22b</span><span class="op">=</span><span class="total">3.65b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/645/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Dominix <span class="zh">多米尼克斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/645/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">14</span><span class="op">×</span><span class="unit">232m</span><span class="op">=</span><span class="total">3.25b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29984/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Tengu <span class="zh">金鹏级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29984/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">800m</span><span class="op">=</span><span class="total">3.20b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/11961/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Huginn <span class="zh">休津级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11961/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">406m</span><span class="op">=</span><span class="total">1.62b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/3756/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Gnosis <span class="zh">灵感级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/3756/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">10</span><span class="op">×</span><span class="unit">161m</span><span class="op">=</span><span class="total">1.61b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/626/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Vexor <span class="zh">狂怒者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/626/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">50</span><span class="op">×</span><span class="unit">28m</span><span class="op">=</span><span class="total">1.39b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/11379/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Hawk <span class="zh">战鹰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11379/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip source">unattributed</span></div>
+</div>
+<span class="loss-expr"><span class="total">17</span><span class="op">×</span><span class="unit">63m</span><span class="op">=</span><span class="total">1.07b</span></span>
+</div>
+</section>
+<section id="sec-market">
+<div class="section-header">
+<h2>🛒 Market Status · 4-H & B-9 库存</h2>
+<span class="count">[ 17 doctrines ]</span>
+<span class="hint">synced 4H@2026-04-20T20:25:51 · B9@2026-04-20T20:25:51</span>
+</div>
+<div class="explain" style="border-left-color:var(--teal);background:linear-gradient(180deg,rgba(93,211,216,0.05),transparent);">
+<div class="title" style="color:var(--teal)">📊 How to read</div>
+<p><b>stock</b>: 市场上船体挂单的整船数. <b>min sell</b>: 最低卖单价.</p>
+<p><b>▲ / ▼</b>: 对比昨日的 delta. 价格 <span style="color:var(--red)">红</span> = 今日涨价(买方不利).</p>
+<p><b>target</b>: 目标库存(TBD: 从 wcmkts.streamlit.app 爬). 未配置时显示 stock 但无告急颜色.</p>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/32880/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Venture <span class="zh">冲锋者级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Venture km-B020-3f2b</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">5322 </span><span class="kv">min sell</span><span class="v">465k </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">23 </span><span class="kv">min sell</span><span class="v">1m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/16227/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Ferox <span class="zh">猛鲑级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Ferox km-B021-f28c</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">1859 </span><span class="kv">min sell</span><span class="v">45m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">139 </span><span class="kv">min sell</span><span class="v">57m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/11381/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Harpy <span class="zh">女妖级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Harpy km-B007-2f92</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">874 </span><span class="kv">min sell</span><span class="v">22m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">88 </span><span class="kv">min sell</span><span class="v">25m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/12003/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Zealot <span class="zh">狂热级</span></div>
+<div class="line2"><span class="chip official">official</span>WC - Armor DPS Zealot v1.4</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">535 </span><span class="kv">min sell</span><span class="v">138m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">201 </span><span class="kv">min sell</span><span class="v">170m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/24694/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Maelstrom <span class="zh">死亡漩涡级</span></div>
+<div class="line2"><span class="chip official">official</span>WC-EN Shield DPS Maelstrom v1.0</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">502 </span><span class="kv">min sell</span><span class="v">185m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">104 </span><span class="kv">min sell</span><span class="v">190m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/626/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Vexor <span class="zh">狂怒者级</span></div>
+<div class="line2"><span class="chip official">official</span>Siege Vexor Mk1</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">460 </span><span class="kv">min sell</span><span class="v">13m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">9 </span><span class="kv">min sell</span><span class="v">19m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/33157/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Hurricane Fleet Issue <span class="zh">暴风级舰队型</span></div>
+<div class="line2"><span class="chip official">official</span>WC HFI 2025</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">206 </span><span class="kv">min sell</span><span class="v">131m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">234 </span><span class="kv">min sell</span><span class="v">150m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/11184/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Crusader <span class="zh">十字军级</span></div>
+<div class="line2"><span class="chip official">official</span>WC Uprising Crusader 2022</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">429 </span><span class="kv">min sell</span><span class="v">25m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">5 </span><span class="kv">min sell</span><span class="v">28m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/12015/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Muninn <span class="zh">缪宁级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Muninn km-B030-309e</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">150 </span><span class="kv">min sell</span><span class="v">170m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">153 </span><span class="kv">min sell</span><span class="v">195m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/11377/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Nemesis <span class="zh">纳美西斯级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Nemesis km-B003-e7aa</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">225 </span><span class="kv">min sell</span><span class="v">17m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">8 </span><span class="kv">min sell</span><span class="v">23m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/11985/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Basilisk <span class="zh">皇冠蜥级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Basilisk km-B008-8f25</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">148 </span><span class="kv">min sell</span><span class="v">150m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">10 </span><span class="kv">min sell</span><span class="v">170m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/72811/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Cyclone Fleet Issue <span class="zh">飓风级舰队型</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Cyclone Fleet Issue km-B007-1875</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">135 </span><span class="kv">min sell</span><span class="v">152m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">22 </span><span class="kv">min sell</span><span class="v">140m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/17636/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Raven Navy Issue <span class="zh">乌鸦级海军型</span></div>
+<div class="line2"><span class="chip official">official</span>FRT RNI</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">133 </span><span class="kv">min sell</span><span class="v">468m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><div class="v na" style="grid-column: 1 / -1">no market data</div></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/629/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Rupture <span class="zh">断崖级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Rupture km-B004-8bd6</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">113 </span><span class="kv">min sell</span><span class="v">12m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><div class="v na" style="grid-column: 1 / -1">no market data</div></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/643/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Armageddon <span class="zh">末日沙场级</span></div>
+<div class="line2"><span class="chip official">official</span>WC-EN - Armor Support Armageddon v1.0</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">48 </span><span class="kv">min sell</span><span class="v">186m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">10 </span><span class="kv">min sell</span><span class="v">198m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/11200/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Taranis <span class="zh">塔纳尼斯级</span></div>
+<div class="line2"><span class="chip B">B</span>FRT Taranis km-B003-798a</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">29 </span><span class="kv">min sell</span><span class="v">24m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">18 </span><span class="kv">min sell</span><span class="v">21m </span></div>
+</div>
+<div class="mkt-row">
+<img class="ship-icon" src="https://images.evetech.net/types/631/render?size=64" alt="" loading="lazy">
+<div class="ship-brief">
+<div class="en">Scythe <span class="zh">镰刀级</span></div>
+<div class="line2"><span class="chip official">official</span>WC - Shield Logi Scythe v5.1</div>
+</div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">4-HWWF</span></div><span class="kv">stock</span><span class="v">39 </span><span class="kv">min sell</span><span class="v">12m </span></div>
+<div class="mkt-col"><div class="mkt-label"><span class="loc">B-9C24</span></div><span class="kv">stock</span><span class="v">3 </span><span class="kv">min sell</span><span class="v">16m </span></div>
+</div>
+</section>
+<section id="sec-breakdown">
+<div class="section-header">
+<h2>◉ Loss Breakdown — All Combat Ships</h2>
+<span class="count">[ 122 ship types ]</span>
+<span class="hint">excluding capsules / shuttles / deployables / industrials</span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/73793/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Phoenix Navy Issue <span class="zh">凤凰级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/73793/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Dreadnought</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">17.45b</span><span class="op">=</span><span class="total">17.45b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/37604/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Apostle <span class="zh">使徒级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/37604/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Force Auxiliary</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">6.44b</span><span class="op">=</span><span class="total">12.88b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/19720/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Revelation <span class="zh">神示级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/19720/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Dreadnought</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">5.74b</span><span class="op">=</span><span class="total">11.48b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/12005/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Ishtar <span class="zh">伊什塔级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12005/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Heavy Assault Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">35</span><span class="op">×</span><span class="unit">210m</span><span class="op">=</span><span class="total">7.34b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/73790/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Revelation Navy Issue <span class="zh">神示级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/73790/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Dreadnought</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">6.83b</span><span class="op">=</span><span class="total">6.83b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/73792/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Moros Navy Issue <span class="zh">莫洛级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/73792/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Dreadnought</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">6.59b</span><span class="op">=</span><span class="total">6.59b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/22428/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Redeemer <span class="zh">救世级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/22428/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Black Ops</div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">1.22b</span><span class="op">=</span><span class="total">4.87b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/17715/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Gila <span class="zh">毒蜥级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17715/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">14</span><span class="op">×</span><span class="unit">323m</span><span class="op">=</span><span class="total">4.52b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/47466/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Praxis <span class="zh">实践级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/47466/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Battleship</div>
+</div>
+<span class="loss-expr"><span class="total">12</span><span class="op">×</span><span class="unit">371m</span><span class="op">=</span><span class="total">4.46b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29990/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Loki <span class="zh">洛基级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29990/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Strategic Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">5</span><span class="op">×</span><span class="unit">881m</span><span class="op">=</span><span class="total">4.41b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/28659/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Paladin <span class="zh">帕拉丁级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/28659/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Marauder</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">1.94b</span><span class="op">=</span><span class="total">3.87b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29988/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Proteus <span class="zh">海神级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29988/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Strategic Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">3</span><span class="op">×</span><span class="unit">1.22b</span><span class="op">=</span><span class="total">3.65b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/54733/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Thunderchild <span class="zh">雷裔级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/54733/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Battleship</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">1.78b</span><span class="op">=</span><span class="total">3.57b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/645/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Dominix <span class="zh">多米尼克斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/645/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Battleship</div>
+</div>
+<span class="loss-expr"><span class="total">14</span><span class="op">×</span><span class="unit">232m</span><span class="op">=</span><span class="total">3.25b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29984/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Tengu <span class="zh">金鹏级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29984/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Strategic Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">800m</span><span class="op">=</span><span class="total">3.20b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/22436/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Widow <span class="zh">寡妇级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/22436/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Black Ops</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">2.98b</span><span class="op">=</span><span class="total">2.98b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/17726/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Apocalypse Navy Issue <span class="zh">灾难级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17726/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Battleship</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">1.84b</span><span class="op">=</span><span class="total">1.84b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/52252/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Ikitursa <span class="zh">伊基图萨级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/52252/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Heavy Assault Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">1.76b</span><span class="op">=</span><span class="total">1.76b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/11961/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Huginn <span class="zh">休津级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11961/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Combat Recon Ship</div>
+</div>
+<span class="loss-expr"><span class="total">4</span><span class="op">×</span><span class="unit">406m</span><span class="op">=</span><span class="total">1.62b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/3756/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Gnosis <span class="zh">灵感级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/3756/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Combat Battlecruiser</div>
+</div>
+<span class="loss-expr"><span class="total">10</span><span class="op">×</span><span class="unit">161m</span><span class="op">=</span><span class="total">1.61b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/22440/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Panther <span class="zh">黑豹级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/22440/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Black Ops</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">1.59b</span><span class="op">=</span><span class="total">1.59b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/29986/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Legion <span class="zh">圣卒级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/29986/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Strategic Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">2</span><span class="op">×</span><span class="unit">769m</span><span class="op">=</span><span class="total">1.54b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/626/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Vexor <span class="zh">狂怒者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/626/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Cruiser</div>
+</div>
+<span class="loss-expr"><span class="total">50</span><span class="op">×</span><span class="unit">28m</span><span class="op">=</span><span class="total">1.39b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/22430/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Sin <span class="zh">罪恶级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/22430/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Black Ops</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">1.34b</span><span class="op">=</span><span class="total">1.34b</span></span>
+</div>
+<div class="row">
+<img class="ship-icon" src="https://images.evetech.net/types/44993/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Pacifier <span class="zh">安抚者</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/44993/losses/startTime/202604200000/endTime/202604210000/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta">Covert Ops</div>
+</div>
+<span class="loss-expr"><span class="total">1</span><span class="op">×</span><span class="unit">1.28b</span><span class="op">=</span><span class="total">1.28b</span></span>
+</div>
+<div style="color: var(--text-dim); text-align: center; padding: 0.5rem; font-size: 12px;">… and 97 more</div>
+</section>
+<details class="registry" id="sec-registry">
+<summary><h2>◉ Doctrine Registry</h2><span class="count">[ 17 active · 21 pending ]</span><span class="hint">点击展开查看注册表 (参考数据,日报仅参考时打开)</span></summary>
+<div class="subgroup-header">Active · 17 个 (已投入使用)</div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/24694/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Maelstrom <span class="zh">死亡漩涡级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/24694/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC-EN Shield DPS Maelstrom v1.0 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 59 km · 30d: 20.71b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#8</div>
+</div>
+<div class="expand-panel">
+<pre>
+[Maelstrom, WC-EN Shield DPS Maelstrom v1.0]
+
+Damage Control II
+Gyrostabilizer II
+Gyrostabilizer II
+Gyrostabilizer II
+Power Diagnostic System II
+
+500MN Cold-Gas Enduring Microwarpdrive
+Large Shield Extender II
+EM Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+Multispectrum Shield Hardener II
+Medium Capacitor Booster II
+
+Heavy Infectious Scoped Energy Neutralizer
+1400mm Howitzer Artillery II
+1400mm Howitzer Artillery II
+1400mm Howitzer Artillery II
+1400mm Howitzer Artillery II
+1400mm Howitzer Artillery II
+1400mm Howitzer Artillery II
+
+Large Thermal Shield Reinforcer II
+Large Core Defense Field Extender I
+Large Core Defense Field Extender I
+
+
+
+
+
+Warrior II x5
+Hornet EC-300 x5
+Valkyrie SW-600 x5
+
+
+Quake L x400
+Tremor L x400
+Navy Cap Booster 800 x26
+Nanite Repair Paste x100
+Republic Fleet Depleted Uranium L x400
+Republic Fleet EMP L x400
+Republic Fleet Fusion L x400
+Republic Fleet Nuclear L x400
+Republic Fleet Phased Plasma L x400
+Republic Fleet Proton L x250
+Republic Fleet Titanium Sabot L x400
+Nanofiber Internal Structure II x2
+&#x27;Notos&#x27; Compact Large Proton Smartbomb x1
+Tracking Enhancer II x1
+Multispectrum Shield Hardener II x1
+
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/24694/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12015/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Muninn <span class="zh">缪宁级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12015/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Muninn km-B030-309e <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 30 km · 30d: 7.18b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#10</div>
+</div>
+<div class="expand-panel">
+<pre>[Muninn, FRT Muninn km-B030]
+
+Co-Processor II
+Ballistic Control System II
+Ballistic Control System II
+Missile Guidance Enhancer II
+Missile Guidance Enhancer II
+Assault Damage Control II
+
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+50MN Cold-Gas Enduring Microwarpdrive
+
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+
+Medium Hydraulic Bay Thrusters I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12015/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11985/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Basilisk <span class="zh">皇冠蜥级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11985/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Basilisk km-B008-8f25 <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 8 km · 30d: 2.18b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#21</div>
+</div>
+<div class="expand-panel">
+<pre>[Basilisk, FRT Basilisk km-B008]
+
+Reactor Control Unit II
+Damage Control II
+
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+50MN Quad LiF Restrained Microwarpdrive
+
+Large Remote Shield Booster II
+Large Murky Compact Remote Shield Booster
+Large Murky Compact Remote Shield Booster
+Large S95a Scoped Remote Shield Booster
+Large Inductive Compact Remote Capacitor Transmitter
+Large Inductive Compact Remote Capacitor Transmitter
+
+Medium Core Defense Field Extender II
+Medium Core Defense Field Extender II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11985/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/16227/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Ferox <span class="zh">猛鲑级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/16227/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Ferox km-B021-f28c <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 21 km · 30d: 1.73b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#13</div>
+</div>
+<div class="expand-panel">
+<pre>[Ferox, FRT Ferox km-B021]
+
+Power Diagnostic System II
+Damage Control II
+Magnetic Field Stabilizer II
+Magnetic Field Stabilizer II
+
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Small Capacitor Booster II
+Large Shield Extender II
+Large Shield Extender II
+50MN Y-T8 Compact Microwarpdrive
+
+250mm Railgun II
+250mm Railgun II
+250mm Railgun II
+250mm Railgun II
+250mm Railgun II
+250mm Railgun II
+Drone Link Augmentor I
+
+Medium Thermal Shield Reinforcer II
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/16227/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/72811/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Cyclone Fleet Issue <span class="zh">飓风级舰队型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/72811/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Cyclone Fleet Issue km-B007-1875 <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 7 km · 30d: 1.68b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#22</div>
+</div>
+<div class="expand-panel">
+<pre>[Cyclone Fleet Issue, FRT Cyclone Fleet Issue km-B007]
+
+Signal Amplifier II
+Damage Control II
+Ballistic Control System II
+Ballistic Control System II
+Ballistic Control System II
+
+Multispectrum Shield Hardener II
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Compact Pb-Acid Cap Battery
+50MN Quad LiF Restrained Microwarpdrive
+
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Heavy Missile Launcher II
+Medium Infectious Scoped Energy Neutralizer
+Drone Link Augmentor I
+
+Medium Hydraulic Bay Thrusters II
+Medium Hydraulic Bay Thrusters II
+Medium EM Shield Reinforcer II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/72811/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/17636/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Raven Navy Issue <span class="zh">乌鸦级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17636/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>FRT RNI <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km · 30d: 519m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#3</div>
+</div>
+<div class="expand-panel">
+<pre>[Raven Navy Issue, FRT RNI ]
+
+Damage Control II
+Ballistic Control System II
+Ballistic Control System II
+Ballistic Control System II
+Signal Amplifier II
+
+Large Shield Extender II
+Large Shield Extender II
+EM Shield Hardener II
+500MN Quad LiF Restrained Microwarpdrive
+Heavy Capacitor Booster II
+Large Shield Extender II
+Multispectrum Shield Hardener II
+
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+
+Large Thermal Shield Reinforcer II
+Large Core Defense Field Extender I
+Large Core Defense Field Extender I
+
+
+Warrior II x5
+Caldari Navy Warden x2
+Hornet EC-300 x5
+
+
+Inferno Fury Cruise Missile x500
+Mjolnir Fury Cruise Missile x500
+Mjolnir Precision Cruise Missile x500
+Nova Fury Cruise Missile x500
+Scourge Fury Cruise Missile x500
+Scourge Precision Cruise Missile x1000
+Navy Cap Booster 800 x16
+Caldari Navy Inferno Cruise Missile x1000
+Caldari Navy Mjolnir Cruise Missile x1000
+Caldari Navy Nova Cruise Missile x1000
+Caldari Navy Scourge Cruise Missile x1000
+Nanite Repair Paste x100
+Scan Resolution Script x1
+Targeting Range Script x1
+Agency &#x27;Pyrolancea&#x27; DB3 Dose I x1
+Missile Guidance Enhancer II x1
+Sensor Booster II x1
+Multispectrum Shield Hardener II x1</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/17636/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11381/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Harpy <span class="zh">女妖级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11381/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Harpy km-B007-2f92 <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 7 km · 30d: 315m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#33</div>
+</div>
+<div class="expand-panel">
+<pre>[Harpy, FRT Harpy km-B007]
+
+Magnetic Field Stabilizer II
+Vortex Compact Magnetic Field Stabilizer
+EFFA Compact Assault Damage Control
+
+5MN Y-T8 Compact Microwarpdrive
+F-90 Compact Sensor Booster
+Compact EM Shield Amplifier
+Caldari Navy Small Shield Extender
+
+150mm Railgun II
+150mm Railgun II
+150mm Railgun II
+150mm Railgun II
+
+Small Hybrid Locus Coordinator II
+Small Hybrid Locus Coordinator II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11381/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12003/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Zealot <span class="zh">狂热级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12003/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC - Armor DPS Zealot v1.4 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km · 30d: 261m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#6</div>
+</div>
+<div class="expand-panel">
+<pre>[Zealot, WC - Armor DPS Zealot v1.4]
+
+Prototype Compact Thermal Armor Hardener I
+1600mm Steel Plates II
+Shadow Serpentis EM Armor Hardener
+Assault Damage Control II
+Multispectrum Coating II
+Heat Sink II
+Heat Sink II
+
+10MN Afterburner II
+Tracking Disruptor II
+Tracking Disruptor II
+
+Heavy Beam Laser II
+Heavy Beam Laser II
+Heavy Beam Laser II
+Heavy Beam Laser II
+Heavy Beam Laser II
+
+Medium Ancillary Current Router II
+Medium Trimark Armor Pump II
+
+
+
+
+
+Warrior II x5
+Hornet EC-300 x5
+
+
+Aurora M x5
+Gleam M x5
+Imperial Navy Multifrequency M x10
+Imperial Navy Radio M x5
+Imperial Navy Standard M x5
+Imperial Navy Xray M x5
+Multifrequency M x5
+Missile Precision Disruption Script x2
+Missile Range Disruption Script x2
+Nanite Repair Paste x100
+Scan Resolution Dampening Script x2
+Targeting Range Dampening Script x2
+Optimal Range Disruption Script x2
+Tracking Speed Disruption Script x2
+Optimal Range Script x2
+Tracking Speed Script x2
+Inherent Implants &#x27;Squire&#x27; Power Grid Management EG-602 x1
+Gravimetric ECM II x2
+Ladar ECM II x2
+Magnetometric ECM II x2
+Radar ECM II x2
+Remote Sensor Dampener II x2
+Stasis Webifier II x1
+Tracking Computer II x2
+Warp Disruptor II x1
+Warp Scrambler II x1
+Guidance Disruptor II x2
+
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12003/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/629/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Rupture <span class="zh">断崖级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/629/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Rupture km-B004-8bd6 <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 4 km · 30d: 132m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#38</div>
+</div>
+<div class="expand-panel">
+<pre>[Rupture, FRT Rupture km-B004]
+
+Gyrostabilizer II
+Gyrostabilizer II
+Inertial Stabilizers II
+Tracking Enhancer II
+Damage Control II
+
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+50MN Y-T8 Compact Microwarpdrive
+
+425mm AutoCannon II
+425mm AutoCannon II
+425mm AutoCannon II
+425mm AutoCannon II
+
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/629/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/32880/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Venture <span class="zh">冲锋者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/32880/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Venture km-B020-3f2b <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 20 km · 30d: 125m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#11</div>
+</div>
+<div class="expand-panel">
+<pre>[Venture, FRT Venture km-B020]
+
+Expanded Cargohold II
+
+
+Industrial Cynosural Field Generator
+
+Small Cargohold Optimization I
+Small Cargohold Optimization I
+Small Cargohold Optimization I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/32880/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11200/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Taranis <span class="zh">塔纳尼斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11200/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Taranis km-B003-798a <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 3 km · 30d: 107m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#37</div>
+</div>
+<div class="expand-panel">
+<pre>[Taranis, FRT Taranis km-B003]
+
+Damage Control II
+Mark I Compact Reinforced Bulkheads
+Magnetic Field Stabilizer II
+
+Fleeting Compact Stasis Webifier
+Faint Epsilon Scoped Warp Scrambler
+5MN Y-T8 Compact Microwarpdrive
+
+Light Neutron Blaster II
+Light Neutron Blaster II
+Light Neutron Blaster II
+
+Small Transverse Bulkhead II
+Small Transverse Bulkhead II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11200/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11377/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Nemesis <span class="zh">纳美西斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11377/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip B">B</span>FRT Nemesis km-B003-e7aa <span style="color:var(--text-dim);margin-left:0.5rem">· km reverse · 3 km · 30d: 92m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#36</div>
+</div>
+<div class="expand-panel">
+<pre>[Nemesis, FRT Nemesis km-B003]
+
+Inertial Stabilizers II
+Warp Core Stabilizer II
+
+Medium Azeotropic Restrained Shield Extender
+Compact Thermal Shield Amplifier
+Compact EM Shield Amplifier
+Compact EM Shield Amplifier
+
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Polycarbon Engine Housing I
+Small Polycarbon Engine Housing I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11377/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/631/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Scythe <span class="zh">镰刀级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/631/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC - Shield Logi Scythe v5.1 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km · 30d: 41m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#4</div>
+</div>
+<div class="expand-panel">
+<pre>[Scythe,   WC - Shield Logi Scythe v5.1]
+
+Damage Control II
+Power Diagnostic System II
+Capacitor Power Relay II
+Capacitor Power Relay II
+Capacitor Power Relay II
+
+Multispectrum Shield Hardener II
+50MN Y-T8 Compact Microwarpdrive
+Large F-S9 Regolith Compact Shield Extender
+Large F-S9 Regolith Compact Shield Extender
+Medium Compact Pb-Acid Cap Battery
+
+Medium Murky Compact Remote Shield Booster
+Medium Murky Compact Remote Shield Booster
+Small Asymmetric Enduring Remote Shield Booster
+
+Medium Ancillary Current Router I
+Medium EM Shield Reinforcer I
+Medium Core Defense Field Extender I
+
+
+
+
+
+Light Armor Maintenance Bot I x5
+Light Shield Maintenance Bot I x4
+
+
+Nanite Repair Paste x50
+Standard Mindflood Booster x1
+
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/631/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/643/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Armageddon <span class="zh">末日沙场级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/643/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC-EN - Armor Support Armageddon v1.0 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km  · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#7</div>
+</div>
+<div class="expand-panel">
+<pre>
+[Armageddon,  WC-EN - Armor Support Armageddon v1.0]
+
+1600mm Steel Plates II
+1600mm Steel Plates II
+1600mm Steel Plates II
+Damage Control II
+Multispectrum Energized Membrane II
+Multispectrum Energized Membrane II
+EM Energized Membrane II
+
+500MN Quad LiF Restrained Microwarpdrive
+Large Cap Battery II
+Large Cap Battery II
+Heavy F-RX Compact Capacitor Booster
+
+Heavy Energy Neutralizer II
+Heavy Energy Neutralizer II
+Medium Energy Neutralizer II
+Heavy Infectious Scoped Energy Neutralizer
+Medium Energy Neutralizer II
+Heavy Energy Neutralizer II
+Heavy Energy Neutralizer II
+
+Large Trimark Armor Pump I
+Large Trimark Armor Pump I
+Large Trimark Armor Pump I
+
+
+
+
+
+Acolyte II x5
+Warrior II x5
+Infiltrator II x5
+Valkyrie II x5
+Warden II x5
+Infiltrator EV-600 x10
+
+
+Navy Cap Booster 3200 x7
+Nanite Repair Paste x100
+EM Armor Hardener II x1
+Reactive Armor Hardener x1
+
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/643/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11184/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Crusader <span class="zh">十字军级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11184/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC Uprising Crusader 2022 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km  · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#1</div>
+</div>
+<div class="expand-panel">
+<pre>[Crusader, WC Uprising Crusader 2022]
+
+Damage Control II
+Multispectrum Coating II
+Heat Sink II
+200mm Rolled Tungsten Compact Plates
+
+Warp Scrambler II
+5MN Y-T8 Compact Microwarpdrive
+
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+
+Small Ancillary Current Router II
+Small Energy Collision Accelerator I
+
+
+Conflagration S x4
+Scorch S x4
+Imperial Navy Standard S x4
+Nanite Repair Paste x50
+Scan Resolution Dampening Script x1
+Phased Muon Scoped Sensor Dampener x1
+Stasis Webifier II x1
+J5 Enduring Warp Disruptor x1</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11184/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/33157/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Hurricane Fleet Issue <span class="zh">暴风级舰队型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/33157/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>WC HFI 2025 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km  · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#2</div>
+</div>
+<div class="expand-panel">
+<pre>[Hurricane Fleet Issue, WC HFI 2025]
+Damage Control II
+Power Diagnostic System II
+Gyrostabilizer II
+Gyrostabilizer II
+Tracking Enhancer II
+Nanofiber Internal Structure II
+
+Large Shield Extender II
+Large Shield Extender II
+Multispectrum Shield Hardener II
+50MN Cold-Gas Enduring Microwarpdrive
+
+Rapid Light Missile Launcher II
+720mm Howitzer Artillery II
+720mm Howitzer Artillery II
+720mm Howitzer Artillery II
+720mm Howitzer Artillery II
+720mm Howitzer Artillery II
+720mm Howitzer Artillery II
+
+Medium EM Shield Reinforcer II
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+
+
+
+Valkyrie II x5
+
+Caldari Navy Scourge Light Missile x100
+Republic Fleet Phased Plasma M x800
+Tremor M x800
+Republic Fleet Carbonized Lead M x800
+Republic Fleet EMP M x800
+Republic Fleet Depleted Uranium M x920
+Republic Fleet Fusion M x920
+Republic Fleet Titanium Sabot M x800
+Scourge Precision Light Missile x20
+Republic Fleet Nuclear M x800
+Nanite Repair Paste x100
+Quake M x800
+
+
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/33157/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/626/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Vexor <span class="zh">狂怒者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/626/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip official">official</span>Siege Vexor Mk1 <span style="color:var(--text-dim);margin-left:0.5rem">· Orthel ↑ · 0 km  · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right;white-space:nowrap">last: 2026-04-20<br>doc#5</div>
+</div>
+<div class="expand-panel">
+<pre>[Vexor, Siege Vexor Mk1]
+
+Drone Damage Amplifier II
+Drone Damage Amplifier II
+Drone Damage Amplifier II
+Capacitor Flux Coil II
+Damage Control II
+
+100MN Y-S8 Compact Afterburner
+Large Shield Extender II
+Large Shield Extender II
+Multispectrum Shield Hardener II
+
+150mm Railgun II
+150mm Railgun II
+150mm Railgun II
+
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+Medium EM Shield Reinforcer I
+
+
+Ogre II x5
+
+
+Javelin S x1000
+Spike S x2000</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/626/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">EVE 游戏内 → Fitting → Import from Clipboard</span>
+</div></div>
+<div class="subgroup-header">Pending Review · 21 个 C 级候选 (待审)</div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11978/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Scimitar <span class="zh">曲剑级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11978/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Scimitar km-C016-c390 <span style="color:var(--text-dim);margin-left:0.5rem">· 16 km · 30d: 5.00b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#12</div>
+</div>
+<div class="expand-panel">
+<pre>[Scimitar, FRT Scimitar km-C016]
+
+Capacitor Power Relay II
+Capacitor Power Relay II
+Capacitor Power Relay II
+Damage Control II
+
+Multispectrum Shield Hardener II
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+50MN Quad LiF Restrained Microwarpdrive
+
+Large Asymmetric Enduring Remote Shield Booster
+Pithum C-Type Medium Remote Shield Booster
+Pithum C-Type Medium Remote Shield Booster
+Pithum C-Type Medium Remote Shield Booster
+
+Medium Capacitor Control Circuit II
+Medium Core Defense Field Extender II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11978/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11393/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Retribution <span class="zh">审判者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11393/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Retribution km-C056-ee7d <span style="color:var(--text-dim);margin-left:0.5rem">· 56 km · 30d: 3.38b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#9</div>
+</div>
+<div class="expand-panel">
+<pre>[Retribution, FRT Retribution km-C056]
+
+Heat Sink II
+Nanofiber Internal Structure II
+Nanofiber Internal Structure II
+Extruded Compact Heat Sink
+EFFA Compact Assault Damage Control
+
+5MN Y-T8 Compact Microwarpdrive
+F-90 Compact Sensor Booster
+
+Small Focused Beam Laser II
+Small Focused Beam Laser II
+Small Focused Beam Laser II
+Small Focused Beam Laser II
+Small Coaxial Compact Remote Armor Repairer
+
+Small Energy Locus Coordinator II
+Small Energy Locus Coordinator II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11393/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/638/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Raven <span class="zh">乌鸦级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/638/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Raven km-C004-ce20 <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 1.41b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#19</div>
+</div>
+<div class="expand-panel">
+<pre>[Raven, FRT Raven km-C004]
+
+Signal Amplifier II
+Damage Control II
+Ballistic Control System II
+Ballistic Control System II
+Ballistic Control System II
+
+Multispectrum Shield Hardener II
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Heavy Capacitor Booster II
+Large Shield Extender II
+Large Shield Extender II
+500MN Quad LiF Restrained Microwarpdrive
+
+Heavy Infectious Scoped Energy Neutralizer
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+Cruise Missile Launcher II
+
+Large Core Defense Field Extender I
+Large Core Defense Field Extender I
+Large Thermal Shield Reinforcer II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/638/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11993/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Cerberus <span class="zh">希尔博拉斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11993/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Cerberus km-C005-2966 <span style="color:var(--text-dim);margin-left:0.5rem">· 5 km · 30d: 1.29b · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#20</div>
+</div>
+<div class="expand-panel">
+<pre>[Cerberus, FRT Cerberus km-C005]
+
+Ballistic Control System II
+Ballistic Control System II
+Ballistic Control System II
+Assault Damage Control II
+
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+50MN Y-T8 Compact Microwarpdrive
+
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11993/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/24698/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Drake <span class="zh">幼龙级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/24698/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Drake km-C008-2aff <span style="color:var(--text-dim);margin-left:0.5rem">· 8 km · 30d: 647m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#17</div>
+</div>
+<div class="expand-panel">
+<pre>[Drake, FRT Drake km-C008]
+
+Damage Control II
+Ballistic Control System II
+Ballistic Control System II
+Missile Guidance Enhancer II
+
+Multispectrum Shield Hardener II
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+Compact EM Shield Amplifier
+50MN Quad LiF Restrained Microwarpdrive
+
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+&#x27;Arbalest&#x27; Heavy Missile Launcher
+
+Medium Hydraulic Bay Thrusters I
+Medium Thermal Shield Reinforcer I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/24698/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/17709/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Omen Navy Issue <span class="zh">启示级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17709/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Omen Navy Issue km-C004-e612 <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 497m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#26</div>
+</div>
+<div class="expand-panel">
+<pre>[Omen Navy Issue, FRT Omen Navy Issue km-C004]
+
+Inertial Stabilizers II
+Inertial Stabilizers II
+Signal Amplifier II
+Signal Amplifier II
+Signal Amplifier II
+Heat Sink II
+Heat Sink II
+
+Sensor Booster II
+Tracking Computer II
+50MN Quad LiF Restrained Microwarpdrive
+
+Heavy Beam Laser II
+Heavy Beam Laser II
+Heavy Beam Laser II
+Heavy Beam Laser II
+Small Ancillary Remote Armor Repairer
+
+Medium Hyperspatial Velocity Optimizer II
+Medium Energy Locus Coordinator II
+Medium Energy Locus Coordinator II
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/17709/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/16229/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Brutix <span class="zh">布鲁提克斯级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/16229/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Brutix km-C003-4284 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 495m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#23</div>
+</div>
+<div class="expand-panel">
+<pre>[Brutix, FRT Brutix km-C003]
+
+Reinforced Bulkheads II
+Reinforced Bulkheads II
+Reinforced Bulkheads II
+Damage Control II
+Magnetic Field Stabilizer II
+Magnetic Field Stabilizer II
+
+Warp Scrambler II
+Balmer Series Compact Tracking Disruptor I
+Medium Micro Jump Drive
+50MN Y-T8 Compact Microwarpdrive
+
+Heavy Neutron Blaster II
+Heavy Neutron Blaster II
+Heavy Neutron Blaster II
+Heavy Neutron Blaster II
+Heavy Neutron Blaster II
+Heavy Neutron Blaster II
+Small Energy Nosferatu II
+
+Medium Transverse Bulkhead I
+Medium Transverse Bulkhead I
+Medium Transverse Bulkhead I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/16229/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/17634/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Caracal Navy Issue <span class="zh">狞獾级海军型</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/17634/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Caracal Navy Issue km-C006-9197 <span style="color:var(--text-dim);margin-left:0.5rem">· 6 km · 30d: 404m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#15</div>
+</div>
+<div class="expand-panel">
+<pre>[Caracal Navy Issue, FRT Caracal Navy Issue km-C006]
+
+Damage Control II
+Ballistic Control System II
+Ballistic Control System II
+
+Warp Scrambler II
+Multispectrum Shield Hardener II
+Large Shield Extender II
+Large Shield Extender II
+X5 Enduring Stasis Webifier
+50MN Cold-Gas Enduring Microwarpdrive
+
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+
+Medium EM Shield Reinforcer I
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/17634/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/11184/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Crusader <span class="zh">十字军级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/11184/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Crusader km-C005-820b <span style="color:var(--text-dim);margin-left:0.5rem">· 5 km · 30d: 351m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#18</div>
+</div>
+<div class="expand-panel">
+<pre>[Crusader, FRT Crusader km-C005]
+
+Heat Sink II
+Heat Sink II
+IFFA Compact Damage Control
+Small Ancillary Armor Repairer
+
+Initiated Compact Warp Scrambler
+5MN Y-T8 Compact Microwarpdrive
+
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+Small Focused Pulse Laser II
+
+Small Polycarbon Engine Housing II
+Small Ancillary Current Router I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/11184/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12032/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Manticore <span class="zh">蝎尾怪级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12032/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Manticore km-C004-5baf <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 243m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#29</div>
+</div>
+<div class="expand-panel">
+<pre>[Manticore, FRT Manticore km-C004]
+
+Crosslink Compact Ballistic Control System
+Ballistic Control System II
+
+5MN Y-T8 Compact Microwarpdrive
+Small F-S9 Regolith Compact Shield Extender
+Small F-S9 Regolith Compact Shield Extender
+Phased Scoped Target Painter
+
+Torpedo Launcher II
+Torpedo Launcher II
+Torpedo Launcher II
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Processor Overclocking Unit I
+Small Bay Loading Accelerator I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12032/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12034/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Hound <span class="zh">猎犬级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12034/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Hound km-C003-8858 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 203m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#27</div>
+</div>
+<div class="expand-panel">
+<pre>[Hound, FRT Hound km-C003]
+
+Co-Processor II
+Ballistic Control System II
+Ballistic Control System II
+
+Small Shield Extender II
+Small Shield Extender II
+5MN Y-T8 Compact Microwarpdrive
+
+Torpedo Launcher II
+Torpedo Launcher II
+Torpedo Launcher II
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Processor Overclocking Unit I
+Small Bay Loading Accelerator I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12034/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/620/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Osprey <span class="zh">鱼鹰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/620/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Osprey km-C008-a4c9 <span style="color:var(--text-dim);margin-left:0.5rem">· 8 km · 30d: 170m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#14</div>
+</div>
+<div class="expand-panel">
+<pre>[Osprey, FRT Osprey km-C008]
+
+Damage Control II
+Mark I Compact Power Diagnostic System
+Mark I Compact Reactor Control Unit
+
+Multispectrum Shield Hardener II
+EM Shield Hardener II
+Large Shield Extender II
+Large F-S9 Regolith Compact Shield Extender
+50MN Y-T8 Compact Microwarpdrive
+
+Medium Murky Compact Remote Shield Booster
+Medium Murky Compact Remote Shield Booster
+Medium Murky Compact Remote Shield Booster
+Medium Inductive Compact Remote Capacitor Transmitter
+Medium Inductive Compact Remote Capacitor Transmitter
+
+Medium Thermal Shield Reinforcer I
+Medium Core Defense Field Extender I
+Medium Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/620/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/634/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Exequror <span class="zh">送葬者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/634/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Exequror km-C004-d432 <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 126m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#30</div>
+</div>
+<div class="expand-panel">
+<pre>[Exequror, FRT Exequror km-C004]
+
+Power Diagnostic System II
+Power Diagnostic System II
+Damage Control II
+Multispectrum Energized Membrane II
+Multispectrum Energized Membrane II
+1600mm Rolled Tungsten Compact Plates
+
+Cap Recharger II
+Cap Recharger II
+Tracking Disruptor II
+10MN Monopropellant Enduring Afterburner
+
+Medium Remote Armor Repairer II
+Medium Remote Armor Repairer II
+Medium Remote Armor Repairer II
+
+Medium Trimark Armor Pump I
+Medium Ancillary Current Router I
+Medium Capacitor Control Circuit I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/634/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/12034/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Hound <span class="zh">猎犬级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/12034/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Hound km-C003-aee7 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 119m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#28</div>
+</div>
+<div class="expand-panel">
+<pre>[Hound, FRT Hound km-C003]
+
+Vigor Compact Micro Auxiliary Power Core
+Ballistic Control System II
+Ballistic Control System II
+
+5MN Y-T8 Compact Microwarpdrive
+Medium F-S9 Regolith Compact Shield Extender
+Phased Scoped Target Painter
+
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Prototype &#x27;Arbalest&#x27; Torpedo Launcher
+Covert Ops Cloaking Device II
+Bomb Launcher I
+
+Small Processor Overclocking Unit I
+Small Hydraulic Bay Thrusters I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/12034/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/630/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Bellicose <span class="zh">挑战级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/630/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Bellicose km-C004-0f92 <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 116m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#34</div>
+</div>
+<div class="expand-panel">
+<pre>[Bellicose, FRT Bellicose km-C004]
+
+IFFA Compact Damage Control
+Ballistic Control System II
+Ballistic Control System II
+Ballistic Control System II
+
+Fleeting Compact Stasis Webifier
+Fleeting Compact Stasis Webifier
+Compact Multispectrum Shield Hardener
+X-Large Ancillary Shield Booster
+10MN Y-S8 Compact Afterburner
+
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+Heavy Assault Missile Launcher II
+
+Medium Processor Overclocking Unit I
+Medium Processor Overclocking Unit I
+Medium EM Shield Reinforcer I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/630/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/628/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Arbitrator <span class="zh">主宰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/628/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Arbitrator km-C003-943b <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 105m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#35</div>
+</div>
+<div class="expand-panel">
+<pre>[Arbitrator, FRT Arbitrator km-C003]
+
+Reactor Control Unit II
+Damage Control II
+Multispectrum Energized Membrane II
+1600mm Rolled Tungsten Compact Plates
+Explosive Armor Hardener II
+
+Tracking Disruptor II
+Small Capacitor Booster II
+100MN Y-S8 Compact Afterburner
+Guidance Disruptor II
+
+Small Focused Modal Laser I
+Small Focused Modal Laser I
+Drone Link Augmentor I
+
+Medium Trimark Armor Pump I
+Medium Trimark Armor Pump I
+Medium Ancillary Current Router I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/628/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/593/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Tristan <span class="zh">特里斯坦级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/593/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Tristan km-C004-ee45 <span style="color:var(--text-dim);margin-left:0.5rem">· 4 km · 30d: 48m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#24</div>
+</div>
+<div class="expand-panel">
+<pre>[Tristan, FRT Tristan km-C004]
+
+Damage Control II
+Nanofiber Internal Structure II
+Drone Damage Amplifier II
+
+1MN Afterburner II
+Medium Shield Extender II
+Drone Navigation Computer I
+
+75mm Prototype Gauss Gun
+75mm Prototype Gauss Gun
+Prototype Cloaking Device I
+
+Small Processor Overclocking Unit II
+Small EM Shield Reinforcer I
+Small Core Defense Field Extender I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/593/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/593/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Tristan <span class="zh">特里斯坦级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/593/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Tristan km-C003-f683 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 12m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#25</div>
+</div>
+<div class="expand-panel">
+<pre>[Tristan, FRT Tristan km-C003]
+
+Drone Damage Amplifier II
+Drone Damage Amplifier II
+Drone Damage Amplifier II
+
+Tracking Disruptor I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/593/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/3766/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Vigil <span class="zh">守夜者级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/3766/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Vigil km-C007-e8b6 <span style="color:var(--text-dim);margin-left:0.5rem">· 7 km · 30d: 7m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#16</div>
+</div>
+<div class="expand-panel">
+<pre>[Vigil, FRT Vigil km-C007]
+
+Type-D Restrained Inertial Stabilizers
+F-89 Compact Signal Amplifier
+
+Alumel-Wired Enduring Sensor Booster
+Alumel-Wired Enduring Sensor Booster
+Phased Scoped Target Painter
+Phased Scoped Target Painter
+5MN Quad LiF Restrained Microwarpdrive
+
+
+Small Polycarbon Engine Housing I
+Small Particle Dispersion Projector I
+Small Particle Dispersion Projector I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/3766/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/603/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Merlin <span class="zh">小鹰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/603/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Merlin km-C003-6e22 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 1m · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#31</div>
+</div>
+<div class="expand-panel">
+<pre>[Merlin, FRT Merlin km-C003]
+
+Damage Control I
+Mark I Compact Reactor Control Unit
+Magnetic Field Stabilizer I
+
+Medium Shield Extender I
+J5b Enduring Warp Scrambler
+5MN Cold-Gas Enduring Microwarpdrive
+Small Ancillary Shield Booster
+
+Regulated Light Electron Phase Cannon I
+Regulated Light Electron Phase Cannon I
+Regulated Light Electron Phase Cannon I
+
+Small EM Shield Reinforcer I
+Small EM Shield Reinforcer I
+Small Thermal Shield Reinforcer I
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/603/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+<div class="row expandable">
+<img class="ship-icon" src="https://images.evetech.net/types/603/render?size=64" alt="" loading="lazy" width="64" height="64">
+<div class="ship-info">
+<div class="en">Merlin <span class="zh">小鹰级</span> <a class="zkb" href="https://zkillboard.com/alliance/99003581/ship/603/losses/" target="_blank" rel="noopener" title="FRT losses on zKillboard">zKB ↗</a></div>
+<div class="meta"><span class="chip C">C</span>FRT Merlin km-C003-d751 <span style="color:var(--text-dim);margin-left:0.5rem">· 3 km · 30d: 367k · since 2026-04-20</span></div>
+</div>
+<div style="color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:10px;text-align:right">doc#32</div>
+</div>
+<div class="expand-panel">
+<pre>[Merlin, FRT Merlin km-C003]
+</pre>
+<div class="toolbar">
+<button onclick="copyEft(this)">⎘ Copy EFT</button>
+<a href="https://zkillboard.com/alliance/99003581/ship/603/losses/" target="_blank" rel="noopener" style="text-decoration:none"><button class="secondary" type="button">zKB ↗ all losses</button></a>
+<span class="hint">需人工决定:升 active / 等更多证据 / 退役</span>
+</div></div>
+</details>
+<section id="sec-trend">
+<div class="section-header">
+<h2>◉ 7-Day Consumption Trend</h2>
+<span class="count">[ 34 doctrines ]</span>
+<span class="hint">按 7 日累计 ISK 损失排序</span>
+</div>
+<table class="trend"><thead><tr><th>Doctrine</th>
+<th>04-18</th>
+<th>04-19</th>
+<th>04-20</th>
+<th>Σ count</th><th>Σ ISK</th></tr></thead><tbody>
+<tr><td>Maelstrom · WC-EN Shield DPS Maelstrom v1.0</td>
+<td class="zero">·</td>
+<td class="">81</td>
+<td class="zero">·</td>
+<td class="total">81</td><td class="total">20.71b</td></tr>
+<tr><td>Muninn · FRT Muninn km-B030-309e</td>
+<td class="">37</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="total">38</td><td class="total">7.18b</td></tr>
+<tr><td>Scimitar · FRT Scimitar km-C016-c390</td>
+<td class="">15</td>
+<td class="">5</td>
+<td class="zero">·</td>
+<td class="total">20</td><td class="total">5.00b</td></tr>
+<tr><td>Retribution · FRT Retribution km-C056-ee7d</td>
+<td class="">41</td>
+<td class="">28</td>
+<td class="zero">·</td>
+<td class="total">69</td><td class="total">3.38b</td></tr>
+<tr><td>Basilisk · FRT Basilisk km-B008-8f25</td>
+<td class="">3</td>
+<td class="">7</td>
+<td class="zero">·</td>
+<td class="total">10</td><td class="total">2.18b</td></tr>
+<tr><td>Ferox · FRT Ferox km-B021-f28c</td>
+<td class="">23</td>
+<td class="zero">·</td>
+<td class="zero">·</td>
+<td class="total">23</td><td class="total">1.73b</td></tr>
+<tr><td>Cyclone Fleet Issue · FRT Cyclone Fleet Issue km-B007-1875</td>
+<td class="">1</td>
+<td class="">7</td>
+<td class="zero">·</td>
+<td class="total">8</td><td class="total">1.68b</td></tr>
+<tr><td>Raven · FRT Raven km-C004-ce20</td>
+<td class="">4</td>
+<td class="">2</td>
+<td class="zero">·</td>
+<td class="total">6</td><td class="total">1.41b</td></tr>
+<tr><td>Cerberus · FRT Cerberus km-C005-2966</td>
+<td class="">6</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="total">7</td><td class="total">1.29b</td></tr>
+<tr><td>Drake · FRT Drake km-C008-2aff</td>
+<td class="zero">·</td>
+<td class="">9</td>
+<td class="zero">·</td>
+<td class="total">9</td><td class="total">647m</td></tr>
+<tr><td>Raven Navy Issue · FRT RNI</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="zero">·</td>
+<td class="total">1</td><td class="total">519m</td></tr>
+<tr><td>Omen Navy Issue · FRT Omen Navy Issue km-C004-e612</td>
+<td class="">2</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">5</td><td class="total">497m</td></tr>
+<tr><td>Brutix · FRT Brutix km-C003-4284</td>
+<td class="zero">·</td>
+<td class="">6</td>
+<td class="zero">·</td>
+<td class="total">6</td><td class="total">495m</td></tr>
+<tr><td>Caracal Navy Issue · FRT Caracal Navy Issue km-C006-9197</td>
+<td class="">2</td>
+<td class="">4</td>
+<td class="zero">·</td>
+<td class="total">6</td><td class="total">404m</td></tr>
+<tr><td>Crusader · FRT Crusader km-C005-820b</td>
+<td class="">2</td>
+<td class="">7</td>
+<td class="zero">·</td>
+<td class="total">9</td><td class="total">351m</td></tr>
+<tr><td>Harpy · FRT Harpy km-B007-2f92</td>
+<td class="zero">·</td>
+<td class="">7</td>
+<td class="zero">·</td>
+<td class="total">7</td><td class="total">315m</td></tr>
+<tr><td>Zealot · WC - Armor DPS Zealot v1.4</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="zero">·</td>
+<td class="total">1</td><td class="total">261m</td></tr>
+<tr><td>Manticore · FRT Manticore km-C004-5baf</td>
+<td class="">2</td>
+<td class="zero">·</td>
+<td class="">2</td>
+<td class="total">4</td><td class="total">243m</td></tr>
+<tr><td>Hound · FRT Hound km-C003-8858</td>
+<td class="">3</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="total">4</td><td class="total">203m</td></tr>
+<tr><td>Osprey · FRT Osprey km-C008-a4c9</td>
+<td class="">1</td>
+<td class="">7</td>
+<td class="">2</td>
+<td class="total">10</td><td class="total">170m</td></tr>
+<tr><td>Rupture · FRT Rupture km-B004-8bd6</td>
+<td class="zero">·</td>
+<td class="">5</td>
+<td class="zero">·</td>
+<td class="total">5</td><td class="total">132m</td></tr>
+<tr><td>Exequror · FRT Exequror km-C004-d432</td>
+<td class="">3</td>
+<td class="">1</td>
+<td class="zero">·</td>
+<td class="total">4</td><td class="total">126m</td></tr>
+<tr><td>Venture · FRT Venture km-B020-3f2b</td>
+<td class="">10</td>
+<td class="">12</td>
+<td class="">2</td>
+<td class="total">24</td><td class="total">125m</td></tr>
+<tr><td>Hound · FRT Hound km-C003-aee7</td>
+<td class="zero">·</td>
+<td class="">2</td>
+<td class="">1</td>
+<td class="total">3</td><td class="total">119m</td></tr>
+<tr><td>Bellicose · FRT Bellicose km-C004-0f92</td>
+<td class="zero">·</td>
+<td class="">4</td>
+<td class="zero">·</td>
+<td class="total">4</td><td class="total">116m</td></tr>
+<tr><td>Taranis · FRT Taranis km-B003-798a</td>
+<td class="">2</td>
+<td class="">2</td>
+<td class="zero">·</td>
+<td class="total">4</td><td class="total">107m</td></tr>
+<tr><td>Arbitrator · FRT Arbitrator km-C003-943b</td>
+<td class="zero">·</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">3</td><td class="total">105m</td></tr>
+<tr><td>Nemesis · FRT Nemesis km-B003-e7aa</td>
+<td class="zero">·</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">3</td><td class="total">92m</td></tr>
+<tr><td>Tristan · FRT Tristan km-C004-ee45</td>
+<td class="">4</td>
+<td class="zero">·</td>
+<td class="zero">·</td>
+<td class="total">4</td><td class="total">48m</td></tr>
+<tr><td>Scythe · WC - Shield Logi Scythe v5.1</td>
+<td class="">2</td>
+<td class="zero">·</td>
+<td class="zero">·</td>
+<td class="total">2</td><td class="total">41m</td></tr>
+<tr><td>Tristan · FRT Tristan km-C003-f683</td>
+<td class="zero">·</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">3</td><td class="total">12m</td></tr>
+<tr><td>Vigil · FRT Vigil km-C007-e8b6</td>
+<td class="zero">·</td>
+<td class="">7</td>
+<td class="zero">·</td>
+<td class="total">7</td><td class="total">7m</td></tr>
+<tr><td>Merlin · FRT Merlin km-C003-6e22</td>
+<td class="zero">·</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">3</td><td class="total">1m</td></tr>
+<tr><td>Merlin · FRT Merlin km-C003-d751</td>
+<td class="zero">·</td>
+<td class="">3</td>
+<td class="zero">·</td>
+<td class="total">3</td><td class="total">367k</td></tr>
+</tbody></table>
+</section>
+<div class="byline">
+<img class="portrait" src="https://images.evetech.net/characters/716283942/portrait?size=64" alt="artist D" loading="lazy">
+<div class="info">
+<span class="label">◆ Compiled by · 撰写人</span>
+<span class="who"><b>artist D</b></span>
+<span class="affil"> · <img class="emblem" src="https://images.evetech.net/corporations/98185110/logo?size=32" alt="" loading="lazy">Fuxi Legion <img class="emblem" src="https://images.evetech.net/alliances/99003581/logo?size=32" alt="" loading="lazy">Fraternity. [FRT]</span>
+</div>
+</div>
+</div>
+<div class="footer-strip">
+<span>◆ END OF BRIEF</span>
+<span>Next brief: T+24h @ 18:00 BJT / 10:00 UTC</span>
+<span>FOR INTERNAL USE ─ WC // FRT-CN ▌</span>
+</div>
+<script>
+document.addEventListener('click', e => {
+    if (e.target.closest('a') || e.target.closest('button')) return;
+    const row = e.target.closest('.row.expandable');
+    if (!row) return;
+    const panel = row.nextElementSibling;
+    if (!panel || !panel.classList.contains('expand-panel')) return;
+    const isOpen = panel.classList.toggle('open');
+    row.classList.toggle('open', isOpen);
+});
+
+function copyEft(btn) {
+    const panel = btn.closest('.expand-panel');
+    const pre = panel && panel.querySelector('pre');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copy-ok');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copy-ok'); }, 1800);
+    }).catch(err => {
+        btn.textContent = '✗ Copy failed';
+        console.error(err);
+    });
+}
+</script>
+</body></html>
