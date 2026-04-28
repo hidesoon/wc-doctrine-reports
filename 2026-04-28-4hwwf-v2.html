@@ -6,12 +6,13 @@
 <title>4-HWWF 老星城落幕战 · 2026-04-28 · FRT × Imperium</title>
 <style>
   :root {
-    --bg: #0b0e14;
-    --panel: #121721;
-    --panel-2: #181e2b;
-    --border: #222b3d;
-    --text: #d8dde7;
-    --muted: #7a8497;
+    --bg: #090c12;
+    --panel: #111722;
+    --panel-2: #171e2b;
+    --panel-3: #0f141d;
+    --border: #263142;
+    --text: #dbe2ec;
+    --muted: #8b95a7;
     --accent: #66b2ff;
     --loss: #ff6b6b;
     --win: #7bd88f;
@@ -43,11 +44,12 @@
   header {
     position: relative;
     background:
-      linear-gradient(180deg, rgba(255,209,102,.04), transparent 80%),
-      linear-gradient(90deg, transparent, rgba(102,178,255,.02), transparent);
-    border-radius: 0 0 16px 16px;
-    padding: 24px 20px 22px !important;
-    margin-bottom: 26px;
+      linear-gradient(180deg, rgba(255,209,102,.08), rgba(17,23,34,.68) 58%, rgba(9,12,18,.2)),
+      linear-gradient(90deg, rgba(255,138,61,.08), rgba(102,178,255,.04), rgba(199,119,255,.08));
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 8px;
+    padding: 28px 26px 24px !important;
+    margin-bottom: 18px;
     overflow: hidden;
   }
   header::before {
@@ -161,12 +163,12 @@
     .ship-icon { transition: none; }
   }
 
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; position: relative; z-index: 1; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 80px; position: relative; z-index: 1; }
   header { border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 26px; }
   .tag { display:inline-block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
   .tag.crit { color: var(--gold); }
-  h1 { margin: 6px 0 6px; font-size: 30px; font-weight: 700; letter-spacing: -.01em; }
-  h2 { margin: 36px 0 12px; font-size: 20px; font-weight: 600; border-left: 3px solid var(--accent); padding-left: 10px; }
+  h1 { margin: 8px 0 8px; font-size: clamp(28px, 4vw, 44px); line-height: 1.08; font-weight: 760; letter-spacing: 0; max-width: 860px; }
+  h2 { margin: 40px 0 14px; font-size: 20px; font-weight: 650; border-left: 3px solid var(--accent); padding-left: 10px; }
   h3 { margin: 22px 0 8px; font-size: 16px; font-weight: 600; }
   .tier-h {
     margin: 22px 0 6px; font-size: 13px; font-weight: 700;
@@ -196,7 +198,8 @@
   .g3 { grid-template-columns: repeat(3, 1fr); }
   .g2 { grid-template-columns: 1fr 1fr; }
   .card {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    background: linear-gradient(180deg, rgba(23,30,43,.96), rgba(17,23,34,.96));
+    border: 1px solid var(--border); border-radius: 8px;
     padding: 14px 16px;
   }
   .card .k { color: var(--muted); font-size: 12px; letter-spacing:.04em; text-transform: uppercase; }
@@ -204,9 +207,10 @@
   .card .v.loss { color: var(--loss); }
   .card .v.win { color: var(--win); }
   .card .v.gold { color: var(--gold); }
-  table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 14px; }
-  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 10px; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid rgba(38,49,66,.75); vertical-align: top; }
   th { color: var(--muted); font-weight: 600; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+  tr:hover td { background: rgba(255,255,255,.025); }
   td.num { text-align: right; font-variant-numeric: tabular-nums; }
   .frt { color: var(--frt); font-weight: 600; }
   .gsf { color: var(--gsf); font-weight: 600; }
@@ -217,7 +221,7 @@
   .mu { color: var(--muted); }
 
   /* Doctrine bar charts */
-  .chart-grid { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .chart-grid { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
   .chart-row {
     display: grid;
     grid-template-columns: 160px 1fr 70px;
@@ -281,7 +285,7 @@
   li { margin: 4px 0; }
   .verdict {
     background: #142318; border: 1px solid #2d6b3a; color: #cce8d2;
-    padding: 14px 18px; border-radius: 12px;
+    padding: 14px 18px; border-radius: 8px;
   }
   .verdict strong { color: var(--win); }
   .verdict.action {
@@ -289,14 +293,14 @@
   }
   .verdict.action strong { color: var(--warn); }
   .tz-note {
-    background: #161c28; border-left: 3px solid var(--accent);
-    padding: 8px 12px; margin: 10px 0; font-size: 13px; color: var(--muted);
+    background: rgba(17,23,34,.92); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    padding: 10px 12px; margin: 12px 0; font-size: 13px; color: var(--muted); border-radius: 0 8px 8px 0;
   }
   .tz-note b { color: var(--text); }
   .epitaph {
     text-align: center; padding: 22px 18px; margin: 18px 0;
-    background: linear-gradient(180deg, rgba(255,209,102,.08), rgba(255,209,102,.02));
-    border: 1px solid rgba(255,209,102,.25); border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,209,102,.09), rgba(17,23,34,.72));
+    border: 1px solid rgba(255,209,102,.25); border-radius: 8px;
   }
   .epitaph .dates {
     font-size: 22px; font-weight: 700; color: var(--gold);
@@ -317,7 +321,7 @@
   }
   .sum-card {
     background: linear-gradient(180deg, var(--panel), var(--panel-2));
-    border: 1px solid var(--border); border-radius: 14px;
+    border: 1px solid var(--border); border-radius: 8px;
     padding: 16px 18px; position: relative; overflow: hidden;
   }
   .sum-card::before {
@@ -347,6 +351,49 @@
     .summary-grid { grid-template-columns: 1fr; }
   }
 
+  .header-meta {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 14px;
+  }
+  .meta-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 28px; padding: 3px 10px;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 8px;
+    background: rgba(9,12,18,.32);
+    color: var(--text);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .meta-chip b { color: var(--gold); font-weight: 700; }
+  .report-nav {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin: 14px 0 18px;
+  }
+  .report-nav a {
+    display: block; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(17,23,34,.78);
+    color: var(--text);
+    font-size: 13px; font-weight: 650;
+  }
+  .report-nav a span { display: block; color: var(--muted); font-size: 11px; font-weight: 500; margin-top: 2px; }
+  .report-nav a:hover { text-decoration: none; border-color: rgba(102,178,255,.5); background: rgba(22,31,45,.95); }
+  .analysis-card {
+    background: linear-gradient(180deg, rgba(23,30,43,.98), rgba(11,15,22,.96));
+  }
+  .analysis-card h3 {
+    font-size: 15px; letter-spacing: .02em;
+  }
+  .analysis-card table th:first-child,
+  .analysis-card table td:first-child { min-width: 132px; }
+  @media (max-width: 720px) {
+    .report-nav { grid-template-columns: 1fr 1fr; }
+    header { padding: 22px 18px !important; }
+    .meta-chip { width: 100%; justify-content: space-between; }
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+  }
+
   footer {
     margin-top: 40px; border-top: 1px solid var(--border); padding-top: 16px;
     color: var(--muted); font-size: 12px;
@@ -368,9 +415,16 @@
 <header>
   <div class="header-top">
     <div class="header-text">
-      <div class="tag crit">⚜️ 战斗简报 · AAR · 4-HWWF 老星城落幕战</div>
+      <div class="tag crit">Battle Report · AAR · 4-HWWF Keepstar Final Timer</div>
       <h1>4-HWWF 老星城落幕战 — 不求成功,但求成仁</h1>
-      <div class="sub">2026-04-28 · 殁地 (Delve) · 4-HWWF · 持续 8h 57m · 11,089 人参战 · 帝国宣战第 24 天</div>
+      <div class="header-meta" aria-label="battle metadata">
+        <span class="meta-chip">Date <b>2026-04-28</b></span>
+        <span class="meta-chip">Region <b>Delve</b></span>
+        <span class="meta-chip">System <b>4-HWWF</b></span>
+        <span class="meta-chip">Duration <b>8h 57m</b></span>
+        <span class="meta-chip">Pilots <b>11,089</b></span>
+        <span class="meta-chip">War Day <b>24</b></span>
+      </div>
     </div>
     <div class="header-author">
       <img class="ha-portrait" src="https://images.evetech.net/characters/716283942/portrait?size=128" alt="artist D" loading="lazy">
@@ -438,8 +492,15 @@
 </style>
 
 <div class="tz-note">
-  🕐 <b>时间约定</b>:本简报所有时间统一使用 <b>北京时间 (BJT / UTC+8)</b>。船名使用 EVE 国服中文译名 + 英文原名(每个等级首次出现时标注)。
+  <b>口径约定</b>:本简报所有时间统一使用 <b>北京时间 (BJT / UTC+8)</b>。系统、星域、星座保持 TQ 英文原名;中文舰船名仅作阅读辅助,统计以 WarBeacon / zKillboard 的 TQ type_id 为准。
 </div>
+
+<nav class="report-nav" aria-label="report sections">
+  <a href="#battle-overview">战场概览<span>人数、ISK、时间线</span></a>
+  <a href="#doctrine-analysis">制式表现<span>部署、损失、存活</span></a>
+  <a href="#damage-analysis">伤害拆分<span>建筑 vs 舰船</span></a>
+  <a href="#action-plan">下次调整<span>SOP 与反隐轰</span></a>
+</nav>
 
 <div class="epitaph">
   <div class="dates">2021.2.3 — 2026.4.28</div>
@@ -473,7 +534,7 @@
 
 <p>这是 <b>FRT 同日两座 Keepstar 接连失守</b>的双战场战。B-9 星城上午先丢(FRT 在 1:4 兵力劣势下战至最后),下午全员压到 4-HWWF 打 final timer。<b>这场仗的赢的标准不是"保结构",是"让对方付出尽可能高的代价、让团队问心无愧"</b>。</p>
 
-<h2>战场概览</h2>
+<h2 id="battle-overview">战场概览</h2>
 <div class="grid g4">
   <div class="card"><div class="k">参战人数</div><div class="v">11,089</div><div class="sub">FRT 4,160 · 攻方 6,929</div></div>
   <div class="card"><div class="k">总船损</div><div class="v">12,887</div><div class="sub">FRT 1,269 · 攻方 11,378</div></div>
@@ -526,7 +587,7 @@
   <div class="tl-row"><div class="tl-time">04-29 01:20</div><div class="tl-title">欧时区反收割队 — Jubah</div><div class="sub">SG.CN 小蔡: "FC: jubah · 舰队名: WC HD 欧时区 · 本地防御队"。Final timer 后继续骚扰 Imperium 撤退。</div></div>
 </div>
 
-<h2>制式效果分析(按舰船等级展示)</h2>
+<h2 id="doctrine-analysis">制式效果分析(按舰船等级展示)</h2>
 <p>每个等级独立成图。蓝色边框 = 部署人数,实心色块 = 损失数量(绿=低损失/黄=中等/红=高损失)。数据全部基于 <a href="https://warbeacon.net/br/report/e8c7c91f-4530-4e9b-ad07-d0b786990a87" target="_blank">WarBeacon 战报</a>。</p>
 
 <div class="legend"><span><i class="f"></i>部署</span><span><i class="l1"></i>损失 &lt; 10%</span><span><i class="l2"></i>10-30%</span><span><i class="l3"></i>30-70%</span><span><i class="l4"></i>&gt; 70%</span></div>
@@ -1691,7 +1752,7 @@
 
 
 
-<h2>人均伤害排行(主流制式 ≥ 10 飞行员)</h2>
+<h2 id="damage-analysis">人均伤害排行(主流制式 ≥ 10 飞行员)</h2>
 <p>WarBeacon 的总伤害会把舰船、建筑、部署物一起计入。这里把口径拆开: <b>对舰船伤害</b>更接近实际火力贡献, <b>对结构/部署物伤害</b>包含 Keepstar、泡泡等目标。</p>
 
 <div class="grid g2">
@@ -1736,7 +1797,7 @@
 </div>
 
 <div class="grid g2" style="margin-top:14px">
-  <div class="card" style="border-color: rgba(199,119,255,.35)">
+  <div class="card analysis-card" style="border-color: rgba(199,119,255,.35)">
     <h3 class="gsf" style="margin-top:0">攻方拆建筑/部署物:谁真正打得疼</h3>
     <p>攻方这场的核心任务是拆 Keepstar 和外部部署物,所以评价输出要优先看 <b>结构部署物/人</b> 和规模。小队效率最高的是送葬者海军,但主力压血量靠银鹰、海军乌鸦和隐轰群。</p>
     <table>
@@ -1749,7 +1810,7 @@
     </table>
     <p class="sub">结论:如果下次对方仍打建筑,优先盯防三类东西:远射 HAC/海军乌鸦持续压结构,隐轰群堆总量,以及少量高效率海军巡洋/特种船清部署物。</p>
   </div>
-  <div class="card" style="border-color: rgba(255,138,61,.35)">
+  <div class="card analysis-card" style="border-color: rgba(255,138,61,.35)">
     <h3 class="frt" style="margin-top:0">FRT 反隐轰:谁杀 bomber 最有效</h3>
     <p>我们这边的关键任务不是刷总伤害,而是打掉隐轰循环。评价反隐轰应看 <b>隐轰 final blow</b>、参与击杀数量和单位人数效率。</p>
     <table>
@@ -1848,7 +1909,7 @@
   </ul>
 </div>
 
-<h2 class="warn">🛠️ FRT 下次再遇这种情况怎么调整</h2>
+<h2 id="action-plan" class="warn">FRT 下次再遇这种情况怎么调整</h2>
 
 <h3>1. 部署专门反隐轰中队 — 这是 #1 优先项</h3>
 <div class="card">
@@ -2028,7 +2089,7 @@
 </style>
 
 <footer>
-  数据源:<a href="https://warbeacon.net/br/report/e8c7c91f-4530-4e9b-ad07-d0b786990a87" target="_blank" rel="noopener">WarBeacon 战报</a> · zKillboard ESI fits · WC Doctrine 知识库(auth.wintercoalition.space mirror) · FRT CN Discord(#strat-战略起队 / #bulletin-公告栏 / #skirmish-散打起队 实时拉取) · 中文船名取自国服 SDE · 时间统一北京时间 (BJT/UTC+8) · 本简报仅供军团内部流通 · 生成时间 2026-04-29 03:00 BJT。
+  数据源:<a href="https://warbeacon.net/br/report/e8c7c91f-4530-4e9b-ad07-d0b786990a87" target="_blank" rel="noopener">WarBeacon 战报</a> · zKillboard ESI fits · WC Doctrine 知识库(auth.wintercoalition.space mirror) · FRT CN Discord(#strat-战略起队 / #bulletin-公告栏 / #skirmish-散打起队 实时拉取) · 地名保持 TQ 英文原名 · 舰船中文名仅作阅读辅助,统计以 TQ type_id 为准 · 时间统一北京时间 (BJT/UTC+8) · 本简报仅供军团内部流通 · 生成时间 2026-04-29 03:00 BJT。
 </footer>
 
 </div>
