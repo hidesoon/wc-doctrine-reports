@@ -1798,17 +1798,19 @@
 
 <div class="grid g2" style="margin-top:14px">
   <div class="card analysis-card" style="border-color: rgba(199,119,255,.35)">
-    <h3 class="gsf" style="margin-top:0">攻方拆建筑/部署物:谁真正打得疼</h3>
-    <p>攻方这场的核心任务是拆 Keepstar 和外部部署物,所以评价输出要优先看 <b>结构部署物/人</b> 和规模。小队效率最高的是送葬者海军,但主力压血量靠银鹰、海军乌鸦和隐轰群。</p>
+    <h3 class="gsf" style="margin-top:0">攻方 Keepstar 伤害:隐轰是主力</h3>
+    <p>这里不再把泡泡、MTU、战机等部署物算进建筑输出,只统计 victim type = <b>Keepstar</b> 的伤害。WarBeacon 明细里有 #System、胶囊等归因异常项,下表只看真实舰船制式。</p>
     <table>
-      <tr><th>制式</th><th class="num">人数</th><th class="num">结构部署物/人</th><th class="num">总结构伤害</th><th class="num">部署物 final</th></tr>
-      <tr><td><b>送葬者级海军型</b> Exequror NI</td><td class="num">9</td><td class="num win"><b>241,037</b></td><td class="num">2.17M</td><td class="num">12</td></tr>
-      <tr><td><b>银鹰级</b> Eagle</td><td class="num">80</td><td class="num win">117,059</td><td class="num"><b>9.36M</b></td><td class="num">48</td></tr>
-      <tr><td><b>乌鸦级海军型</b> Raven NI</td><td class="num">100</td><td class="num">99,312</td><td class="num"><b>9.93M</b></td><td class="num">39</td></tr>
-      <tr><td><b>净化级</b> Purifier</td><td class="num">505</td><td class="num">32,686</td><td class="num"><b>16.51M</b></td><td class="num">9</td></tr>
-      <tr><td><b>猎犬/蝎尾怪</b> Hound/Manticore</td><td class="num">377</td><td class="num">27-28K</td><td class="num">10.62M</td><td class="num">10</td></tr>
+      <tr><th>制式</th><th class="num">人数</th><th class="num">Keepstar 总伤害</th><th class="num">Keepstar/人</th><th>说明</th></tr>
+      <tr><td><b>净化级</b> Purifier</td><td class="num">471</td><td class="num win"><b>14.87M</b></td><td class="num">31,567</td><td>单一制式第一,隐轰主力</td></tr>
+      <tr><td><b>猎犬级</b> Hound</td><td class="num">183</td><td class="num win">5.13M</td><td class="num">28,008</td><td>隐轰第二梯队</td></tr>
+      <tr><td><b>缪宁级</b> Muninn</td><td class="num">100</td><td class="num">3.37M</td><td class="num">33,735</td><td>HAC 持续补结构伤害</td></tr>
+      <tr><td><b>蝎尾怪级</b> Manticore</td><td class="num">161</td><td class="num">3.02M</td><td class="num">18,738</td><td>隐轰第三梯队</td></tr>
+      <tr><td><b>乌鸦级海军型</b> Raven NI</td><td class="num">52</td><td class="num">2.15M</td><td class="num win"><b>41,277</b></td><td>海军战列补结构伤害</td></tr>
+      <tr><td><b>十字军级</b> Crusader</td><td class="num">34</td><td class="num">1.71M</td><td class="num win">50,238</td><td>人均高,总量不是主轴</td></tr>
+      <tr><td><b>纳美西斯级</b> Nemesis</td><td class="num">53</td><td class="num">878K</td><td class="num">16,568</td><td>拿到 Keepstar final blow</td></tr>
     </table>
-    <p class="sub">结论:如果下次对方仍打建筑,优先盯防三类东西:远射 HAC/海军乌鸦持续压结构,隐轰群堆总量,以及少量高效率海军巡洋/特种船清部署物。</p>
+    <p class="sub">结论:隐轰没有消失,只是被“总伤害/人”排名摊薄了。按 Keepstar 总伤害看,四类隐轰合计约 <b>23.9M Keepstar</b> 伤害,其中 Purifier 单项 14.87M 全场第一。送葬者海军、银鹰等之前看起来高,主要是打大型泡泡/部署物,不应算作 Keepstar 主伤害。</p>
   </div>
   <div class="card analysis-card" style="border-color: rgba(255,138,61,.35)">
     <h3 class="frt" style="margin-top:0">FRT 反隐轰:谁杀 bomber 最有效</h3>
@@ -1863,9 +1865,9 @@
 
     <h4 style="color:var(--loss); font-size:13px; letter-spacing:.06em; text-transform:uppercase; margin: 12px 0 6px">⚔️ 进攻最给力</h4>
     <ul>
-      <li><b>银鹰级 Eagle + 乌鸦级海军型</b> — 拆建筑主力:两者合计约 19.3M 结构/部署物伤害,持续压星城和外部目标</li>
-      <li><b>送葬者级海军型</b> — 小规模高效率拆部署物,9 人打出 2.17M 结构/部署物伤害</li>
-      <li><b>净化级 / 猎犬级 / 蝎尾怪级 / 纳美西斯级 (隐轰群)</b> — 数量碾压,四类隐轰贡献 23M+ 结构/部署物伤害,是磨星城主力来源</li>
+      <li><b>净化级 / 猎犬级 / 蝎尾怪级 / 纳美西斯级 (隐轰群)</b> — Keepstar 主力来源:四类隐轰合计约 23.9M Keepstar 伤害,净化级单项 14.87M 全场第一</li>
+      <li><b>缪宁级 + 乌鸦级海军型</b> — 非隐轰补充结构伤害,但 Keepstar 总量低于隐轰群</li>
+      <li><b>银鹰级 / 送葬者级海军型</b> — 主要价值更偏清外部泡泡和部署物,不能按“结构/部署物”总和误判成 Keepstar 主力</li>
       <li><b>寡妇级 Widow (黑隐特勤舰)</b> — 仅 2 艘但 jam 锁死星城点防</li>
     </ul>
 
@@ -1902,7 +1904,7 @@
   <p><strong>这场仗的成功标准从一开始就不是"保住星城"。是把对方代价拉满,且让团队问心无愧打完这一仗。两个目标都达成了。</strong></p>
   <ul style="margin-top:8px;">
     <li><b>已确定</b>:FRT 同日丢两座 Keepstar (B-9 + 4-HWWF),硬件损失 315b。Imperium 付 462b 亚 cap + ~3,500 隐轰 (~92% 损失率)。这不是失败,是带血代价的预期交换。</li>
-    <li><b>已确定</b>:双方输出任务不同 — 攻方主要打建筑/部署物,银鹰 + 海军乌鸦 + 隐轰群负责持续拆结构;FRT 主要打舰船和清隐轰,金鹏 / 猛鲑 / 寒鸦是反隐轰击杀核心。</li>
+    <li><b>已确定</b>:双方输出任务不同 — 攻方 Keepstar 伤害主要来自隐轰群,银鹰/送葬者海军更多承担清泡泡和部署物;FRT 主要打舰船和清隐轰,金鹏 / 猛鲑 / 寒鸦是反隐轰击杀核心。</li>
     <li><b>已确定</b>:帕拉丁级 9 艘损失(11.9b)是亚 cap 最重 — 会战装备 (bastion) 模式陷阱明显。同条件下恶狼级损失只 1/3。</li>
     <li><b>已确定</b>:星城死后 30 分钟内 dread 撤离失败,神示级海军型 / 莫洛级海军型 / 2× 神示级 / 4× 帕拉丁级 接连被点 — 是 SOP 问题不是 doctrine 问题。</li>
     <li><b>战歌 / Ezio Harry SOTG (22:40 BJT)</b>:"<i>新战术,新安排,更高效的指挥和更有素质的成员,问心无愧了</i>"</li>
@@ -1913,7 +1915,7 @@
 
 <h3>1. 部署专门反隐轰中队 — 这是 #1 优先项</h3>
 <div class="card">
-  <p>本场 Imperium 隐轰群打出 23M+ 结构/部署物伤害,是磨星城的主力来源之一。FRT 已经靠金鹏 / 猛鲑 / 寒鸦 / 圣卒杀出大量隐轰,但仍缺少一支只负责扫 bomber 的专门中队。noraus 战中已经在喊 "我们杀了 1500 个隐轰" — 这数字本可以更大。</p>
+  <p>本场 Imperium 隐轰群打出约 <b>23.9M Keepstar</b> 伤害,是磨星城的第一主力来源。FRT 已经靠金鹏 / 猛鲑 / 寒鸦 / 圣卒杀出大量隐轰,但仍缺少一支只负责扫 bomber 的专门中队。noraus 战中已经在喊 "我们杀了 1500 个隐轰" — 这数字本可以更大。</p>
   <p><b>下次必备:</b></p>
   <ul>
     <li><b>大型烟雾弹 T1 战列舰中队 (灾难级 T1 + 4× 大型力场烟雾弹)</b>:30-50 艘,星城周围 50km 散开,每 10s cycle 烧隐轰。烟雾弹 AOE 不挑 cloak 状态。</li>
