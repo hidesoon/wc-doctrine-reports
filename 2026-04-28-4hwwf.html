@@ -1692,26 +1692,26 @@
 
 
 <h2>人均伤害排行(主流制式 ≥ 10 飞行员)</h2>
-<p>同样的船,有人开出 12 万伤害,有人开出 1.4 万 — 人均伤害 = 制式效率 + 飞行员熟练度 + 站位/射程发挥的综合指标。</p>
+<p>WarBeacon 的总伤害会把舰船、建筑、部署物一起计入。这里把口径拆开: <b>对舰船伤害</b>更接近实际火力贡献, <b>对结构/部署物伤害</b>包含 Keepstar、泡泡等目标。</p>
 
 <div class="grid g2">
   <div class="card">
     <h3 class="frt">FRT 阵营 · 人均伤害 Top 10</h3>
     <table>
-      <tr><th>等级</th><th>舰船</th><th class="num">人数</th><th class="num">人均伤害</th></tr>
-      <tr><td><span class="pill" style="background:rgba(255,209,102,.15);color:var(--gold)">无畏舰</span></td><td><b>泽尼塔级</b> Zirnitra ★ 王牌</td><td class="num">20</td><td class="num win"><b>393,619</b></td></tr>
-      <tr><td><span class="pill" style="background:rgba(255,138,61,.15);color:var(--frt)">海军无畏舰</span></td><td>莫洛级海军型 Moros NI</td><td class="num">79</td><td class="num win">124,039</td></tr>
-      <tr><td><span class="pill" style="background:rgba(255,138,61,.15);color:var(--frt)">海军无畏舰</span></td><td>神示级海军型 RNI</td><td class="num">103</td><td class="num win">112,658</td></tr>
-      <tr><td><span class="pill" style="background:rgba(199,119,255,.15);color:var(--gsf)">超级航母</span></td><td>冥府级 Hel</td><td class="num">30</td><td class="num">82,051</td></tr>
-      <tr><td><span class="pill" style="background:rgba(199,119,255,.15);color:var(--gsf)">超级航母</span></td><td>夜神级 Nyx</td><td class="num">30</td><td class="num">61,597</td></tr>
-      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">无畏舰</span></td><td>神示级 Revelation</td><td class="num">57</td><td class="num">59,527</td></tr>
-      <tr><td><span class="pill" style="background:rgba(255,200,87,.15);color:var(--warn)">掠夺舰</span></td><td>恶狼级 Vargur</td><td class="num">22</td><td class="num">48,581</td></tr>
-      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">海军战列舰</span></td><td>灾难级海军型 APN</td><td class="num">186</td><td class="num">33,831</td></tr>
-      <tr><td><span class="pill" style="background:rgba(255,107,107,.15);color:var(--loss)">掠夺舰</span></td><td>帕拉丁级 Paladin</td><td class="num">133</td><td class="num">28,515</td></tr>
-      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">海军战列舰</span></td><td>狂暴级舰队型 TFI</td><td class="num">210</td><td class="num">14,744</td></tr>
-      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">战列舰</span></td><td>鹏鲲级 Rokh</td><td class="num">521</td><td class="num">14,633</td></tr>
-      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">战略巡洋舰</span></td><td>金鹏级 Tengu</td><td class="num">136</td><td class="num">14,686</td></tr>
-      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">战列巡洋舰</span></td><td>猛鲑级 Ferox</td><td class="num">322</td><td class="num loss">7,437</td></tr>
+      <tr><th>等级</th><th>舰船</th><th class="num">人数</th><th class="num">总伤害/人</th><th class="num">舰船/人</th><th class="num">结构部署物/人</th></tr>
+      <tr><td><span class="pill" style="background:rgba(255,209,102,.15);color:var(--gold)">无畏舰</span></td><td><b>泽尼塔级</b> Zirnitra ★ 泡泡清理</td><td class="num">20</td><td class="num warn"><b>393,619</b></td><td class="num loss"><b>4,943</b></td><td class="num win"><b>388,676</b></td></tr>
+      <tr><td><span class="pill" style="background:rgba(255,138,61,.15);color:var(--frt)">海军无畏舰</span></td><td>莫洛级海军型 Moros NI</td><td class="num">82</td><td class="num win">121,854</td><td class="num win"><b>72,870</b></td><td class="num">48,983</td></tr>
+      <tr><td><span class="pill" style="background:rgba(255,138,61,.15);color:var(--frt)">海军无畏舰</span></td><td>神示级海军型 RNI</td><td class="num">103</td><td class="num win">112,658</td><td class="num">44,234</td><td class="num">68,424</td></tr>
+      <tr><td><span class="pill" style="background:rgba(199,119,255,.15);color:var(--gsf)">超级航母</span></td><td>冥府级 Hel</td><td class="num">30</td><td class="num">82,237</td><td class="num">57,470</td><td class="num">24,767</td></tr>
+      <tr><td><span class="pill" style="background:rgba(199,119,255,.15);color:var(--gsf)">超级航母</span></td><td>夜神级 Nyx</td><td class="num">30</td><td class="num">61,597</td><td class="num">39,587</td><td class="num">22,010</td></tr>
+      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">无畏舰</span></td><td>神示级 Revelation</td><td class="num">59</td><td class="num">60,659</td><td class="num">32,771</td><td class="num">27,888</td></tr>
+      <tr><td><span class="pill" style="background:rgba(255,200,87,.15);color:var(--warn)">掠夺舰</span></td><td>恶狼级 Vargur</td><td class="num">22</td><td class="num">48,581</td><td class="num">48,581</td><td class="num">0</td></tr>
+      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">海军战列舰</span></td><td>灾难级海军型 APN</td><td class="num">186</td><td class="num">33,845</td><td class="num">32,593</td><td class="num">1,252</td></tr>
+      <tr><td><span class="pill" style="background:rgba(255,107,107,.15);color:var(--loss)">掠夺舰</span></td><td>帕拉丁级 Paladin</td><td class="num">133</td><td class="num">28,826</td><td class="num">28,820</td><td class="num">6</td></tr>
+      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">海军战列舰</span></td><td>狂暴级舰队型 TFI</td><td class="num">210</td><td class="num">14,747</td><td class="num">14,244</td><td class="num">503</td></tr>
+      <tr><td><span class="pill" style="background:rgba(123,216,143,.15);color:var(--win)">战列舰</span></td><td>鹏鲲级 Rokh</td><td class="num">537</td><td class="num">14,727</td><td class="num">13,767</td><td class="num">960</td></tr>
+      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">战略巡洋舰</span></td><td>金鹏级 Tengu</td><td class="num">140</td><td class="num">14,532</td><td class="num">14,263</td><td class="num">269</td></tr>
+      <tr><td><span class="pill" style="background:rgba(102,178,255,.15);color:var(--accent)">战列巡洋舰</span></td><td>猛鲑级 Ferox</td><td class="num">330</td><td class="num loss">7,366</td><td class="num loss">7,328</td><td class="num">38</td></tr>
     </table>
   </div>
   <div class="card">
@@ -1734,9 +1734,9 @@
 </div>
 
 <div class="card" style="margin-top:14px; background: rgba(255,209,102,.06); border-color: rgba(255,209,102,.3)">
-  <h3 class="gold" style="margin-top:0">⚡ 跨阵营人均伤害王者:Zirnitra (泽尼塔级 · 三神裔无畏舰)</h3>
-  <p>20 个 FRT Zirnitra 飞行员人均输出 <b>393,619 伤害</b>,远超第二名 Eagle (125,166) 3 倍。三神裔崩解光束 (Disintegrator) 长射程 + 0% 损失率 = 本场效率最高的制式。</p>
-  <p class="sub">Zirnitra 单艘约 6-7B,但本场零损失意味着 ROI 实际上是无穷大。下次 timer 应该<b>把 Zirnitra 部署量从 20 加到 50+</b>,只要操作纪律到位。</p>
+  <h3 class="gold" style="margin-top:0">⚡ 口径修正:Zirnitra 的高伤害主要不是舰船伤害</h3>
+  <p>20 个 FRT Zirnitra 飞行员总伤害 <b>7.87M</b>,但其中 <b>7.77M</b> 打在结构/部署物上,对舰船只有 <b>98.9K</b>。人均拆开后是:总伤害 <b>393,619</b> / 对舰船 <b class="loss">4,943</b> / 对结构部署物 <b class="win">388,676</b>。</p>
+  <p class="sub">主要目标是大型机动跃迁扰断器 I/II:WarBeacon 明细里 Zirnitra 对大型泡泡造成 7.77M 伤害,拿到 42 个大型泡泡 final blow。因此它本场更像"清泡泡/压部署物"工具,不能按总伤害直接评为跨阵营火力王。</p>
 </div>
 
 <h2>🎯 总结 — 双方各自的进攻 / 防守 / 短板</h2>
@@ -1748,8 +1748,8 @@
 
     <h4 style="color:var(--loss); font-size:13px; letter-spacing:.06em; text-transform:uppercase; margin: 12px 0 6px">⚔️ 进攻最给力</h4>
     <ul>
-      <li><b>泽尼塔级 Zirnitra (无畏舰)</b> — 人均 393K 伤害,0 损,跨阵营人均伤害王者</li>
-      <li><b>神示级海军型 / 莫洛级海军型 (海军无畏舰)</b> — 单船 alpha 110-125K,锁谁谁死</li>
+      <li><b>莫洛级海军型 / 神示级海军型 (海军无畏舰)</b> — 总伤害高,且对舰船人均约 73K / 44K,是真正主力舰船火力</li>
+      <li><b>泽尼塔级 Zirnitra (无畏舰)</b> — 总伤害 393K/人,但舰船伤害仅 4.9K/人;本场主要价值是清外部泡泡和压部署物</li>
       <li><b>金鹏级 Tengu (战略巡洋)</b> — 704 次最后一击全场 #1,反 frig 主力</li>
     </ul>
 
@@ -1816,7 +1816,7 @@
   <p><strong>这场仗的成功标准从一开始就不是"保住星城"。是把对方代价拉满,且让团队问心无愧打完这一仗。两个目标都达成了。</strong></p>
   <ul style="margin-top:8px;">
     <li><b>已确定</b>:FRT 同日丢两座 Keepstar (B-9 + 4-HWWF),硬件损失 315b。Imperium 付 462b 亚 cap + ~3,500 隐轰 (~92% 损失率)。这不是失败,是带血代价的预期交换。</li>
-    <li><b>已确定</b>:核心 doctrine 表现亮眼 — 鹏鲲级 / 灾难级海军型 / 狂暴级舰队型 损失率 < 4%,神示级海军型 / 莫洛级海军型 / 泽尼塔级 alpha 输出充沛,航母 + 超航 共 185 艘仅损 1 艘。</li>
+    <li><b>已确定</b>:核心 doctrine 表现亮眼 — 鹏鲲级 / 灾难级海军型 / 狂暴级舰队型 损失率 < 4%,神示级海军型 / 莫洛级海军型承担主要舰船火力;泽尼塔级总伤害很高,但主要打在外部泡泡和部署物上。航母 + 超航 共 185 艘仅损 1 艘。</li>
     <li><b>已确定</b>:帕拉丁级 9 艘损失(11.9b)是亚 cap 最重 — 会战装备 (bastion) 模式陷阱明显。同条件下恶狼级损失只 1/3。</li>
     <li><b>已确定</b>:星城死后 30 分钟内 dread 撤离失败,神示级海军型 / 莫洛级海军型 / 2× 神示级 / 4× 帕拉丁级 接连被点 — 是 SOP 问题不是 doctrine 问题。</li>
     <li><b>战歌 / Ezio Harry SOTG (22:40 BJT)</b>:"<i>新战术,新安排,更高效的指挥和更有素质的成员,问心无愧了</i>"</li>
